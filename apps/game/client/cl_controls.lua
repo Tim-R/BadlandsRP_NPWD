@@ -61,3 +61,11 @@ end)
 AddEventHandler('npwd:disableControlActions', function(bool)
   disableKeys = bool
 end)
+
+exports('ToggleAllControls', function(keepGameFocus)
+  if not exports.npwd:isPhoneVisible() then
+      return
+  end
+
+  SetNuiFocusKeepInput(keepGameFocus)
+end)
