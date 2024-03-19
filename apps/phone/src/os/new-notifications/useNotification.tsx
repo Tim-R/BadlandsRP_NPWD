@@ -2,6 +2,7 @@ import { useSnackbar } from 'notistack';
 import { useRecoilCallback } from 'recoil';
 import { useApps } from '../apps/hooks/useApps';
 import uuid from 'react-uuid';
+import fetchNui from '../../utils/fetchNui';
 
 import {
   notifications,
@@ -35,6 +36,7 @@ export const useNotification = (): NotificationProps => {
         keepOpen = false,
         onClick,
         duration,
+        sound,
       }: any) => {
         const app = getApp(appId);
 
@@ -44,6 +46,13 @@ export const useNotification = (): NotificationProps => {
         if (curNotis.includes(uniqID)) {
           console.error(`Notification with key: [${uniqID}] already exists!`);
           return;
+        }
+
+        console.log('enqueueNotification in useNotification')
+        console.log('sound is', sound)
+
+        if(sound) {
+          fetchNui(sound);
         }
 
         set(notifications(uniqID), {

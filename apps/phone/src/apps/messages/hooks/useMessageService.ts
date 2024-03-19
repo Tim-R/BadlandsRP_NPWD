@@ -1,5 +1,6 @@
 import { useNuiEvent } from 'fivem-nui-react-lib';
 import { Message, MessageConversation, MessageEvents } from '@typings/messages';
+import { AlertEvents } from '@typings/alerts';
 import { useMessageActions } from './useMessageActions';
 import { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -30,6 +31,7 @@ export const useMessagesService = () => {
         onClick: () => goToConversation(group),
         secondaryTitle: getDisplayByNumber(convName) ?? convName,
         path: `/messages/conversations/${convId}`,
+        sound: AlertEvents.PLAY_ALERT,
       });
     },
     [enqueueNotification],
@@ -39,7 +41,7 @@ export const useMessagesService = () => {
     if (visibility && pathname.includes(`/messages/conversations/${conversation_id}`)) {
       return;
     }
-    
+
     setMessageReadState(conversation_id, 1);
     // Set the current unread count to 1, when they click it will be removed
     addNotification(message, conversationName, conversation_id);
