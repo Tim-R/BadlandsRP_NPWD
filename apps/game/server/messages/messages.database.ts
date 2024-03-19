@@ -51,7 +51,7 @@ export class _MessagesDB {
                           UNIX_TIMESTAMP(npwd_messages.createdAt) as createdAt,
                           npwd_messages.embed
                    FROM npwd_messages
-                   WHERE conversation_id = ?
+                   WHERE conversation_id = ? AND deletedAt IS NULL
                    ORDER BY createdAt DESC
                    LIMIT ? OFFSET ?`;
 
@@ -149,8 +149,9 @@ export class _MessagesDB {
   }
 
   async deleteMessage(message: Message) {
-    const query = `DELETE
-                   FROM npwd_messages
+    const query = `UPDATE
+                   npwd_messages
+                   SET deletedAt = NOW()
                    WHERE id = ?`;
 
     await DbInterface._rawExec(query, [message.id]);
@@ -218,7 +219,7 @@ export class _MessagesDB {
                           npwd_messages.is_embed,
                           npwd_messages.embed
                    FROM npwd_messages
-                   WHERE id = ?`;
+                   WHERE id = ? AND deletedAt IS NULL`;
 
     const [results] = await DbInterface._rawExec(query, [messageId]);
     const result = <Message[]>results;
