@@ -138,6 +138,7 @@ export interface ResourceConfig {
   disabledApps: string[];
   profanityFilter: ProfanityFilter;
   apps: string[];
+  appSort: string[];
   voiceMessage: VoiceMessageConfig;
   contacts: Contacts;
 }
