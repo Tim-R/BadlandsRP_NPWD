@@ -10,13 +10,16 @@ onNetPromise<ContactPay, Contact>(ContactEvents.PAY_CONTACT, (reqObj, resp) => {
   PlayerService.getIdentifierByPhoneNumber(reqObj.data.number, true).then((response) => {
     const resourceExport = exps[config.contacts.payResource ?? ''];
     if (resourceExport) {
-      //dont wait for a response.. devs can add their own "notification" triggers in their exports if they wish
-      exps[config.contacts.payResource][config.contacts.payFunction](reqObj.source, response, reqObj.data.amount)
+      exps[config.contacts.payResource][config.contacts.payFunction](reqObj.source, response, reqObj.data.amount).then((r: any) => {
+        let [success, message] = r;
+        resp({ status: success ? 'ok' : 'error', errorMsg: message });
+      });
+
+      return
     } else {
       contactsLogger.error(`No such resource exists for ${config.contacts.payResource} (${reqObj.source})`);
       return resp({ status: 'error', errorMsg: 'INTERNAL_ERROR' });
     }
-    resp({ status: 'ok', errorMsg: '' });
   }).catch((e) => {
     contactsLogger.error(
       `Error occured in fetch identifier by phone event (${reqObj.source}), Error:  ${e.message}`,

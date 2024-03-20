@@ -23,8 +23,13 @@ export const SendMoneyModal: React.FC<SendMoneyModalProps> = ({
   const [amount, setAmount] = useState(500);
 
   const handleAmountChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const inputVal = e.currentTarget.value;
-    setAmount(parseInt(inputVal));
+    let amt = parseInt(e.currentTarget.value);
+
+    if(isNaN(amt)) {
+      amt = 0;
+    }
+
+    setAmount(amt);
   };
 
   const sendContactMoney = () => {

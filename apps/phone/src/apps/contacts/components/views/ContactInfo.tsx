@@ -215,12 +215,7 @@ const ContactsInfoPage: React.FC = () => {
 
             {ResourceConfig?.general?.useResourceIntegration &&
               ResourceConfig?.contacts?.frameworkPay && (
-                <button
-                  onClick={openpayModal}
-                  className="group flex items-center justify-center rounded-md py-2 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                >
-                  <HelpingHand className="h-6 w-6 dark:text-neutral-400 dark:group-hover:text-neutral-100" />
-                </button>
+                <ContactAction onClick={openpayModal} Icon={HelpingHand} />
               )}
             <ContactAction onClick={handleContactDelete} Icon={Trash2} />
           </div>

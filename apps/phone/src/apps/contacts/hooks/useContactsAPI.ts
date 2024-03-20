@@ -16,9 +16,9 @@ export const useContactsAPI = () => {
   const payContact = useCallback(({ number, amount }: ContactPay) => {
       fetchNui<ServerPromiseResp<ContactPay>>(ContactEvents.PAY_CONTACT, { number, amount }).then((resp) => {
         if (resp.status !== 'ok') {
-          return addAlert({message: t('CONTACTS.FEEDBACK.PAYMENTFAILED'), type: 'error'});
+          return addAlert({message: resp.errorMsg, type: 'error'});
         }
-        addAlert({ message: t('CONTACTS.FEEDBACK.PAYMENTSENT'), type: 'success'});
+        addAlert({ message: resp.errorMsg, type: 'success'});
       });
     }, [addAlert, t]
   );
