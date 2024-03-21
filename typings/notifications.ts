@@ -32,6 +32,7 @@ export type CreateNotificationDTO = {
   path: string;
   notisId: string;
   onClick: () => void | null;
+  sound?: string;
 };
 
 export type SystemNotificationDTO = {

@@ -3,6 +3,7 @@ import { useRecoilCallback } from 'recoil';
 import { useApps } from '../apps/hooks/useApps';
 import uuid from 'react-uuid';
 import fetchNui from '../../utils/fetchNui';
+import { AlertEvents } from '@typings/alerts';
 
 import {
   notifications,
@@ -48,8 +49,9 @@ export const useNotification = (): NotificationProps => {
           return;
         }
 
-        console.log('enqueueNotification in useNotification')
-        console.log('sound is', sound)
+        if(sound === '$$MESSAGES-ALERT') {
+          sound = AlertEvents.PLAY_ALERT;
+        }
 
         if(sound) {
           fetchNui(sound);

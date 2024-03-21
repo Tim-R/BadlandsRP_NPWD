@@ -37,6 +37,7 @@ export const useNotificationListener = () => {
       path: data.path,
       notisId: data.notisId,
       onClick: null,
+      sound: data.sound,
     });
   };
 
