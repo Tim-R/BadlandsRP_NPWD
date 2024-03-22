@@ -31,6 +31,11 @@ export const OnCallMap = new Map<string, (ctx: OnCallExportCtx) => void>();
       forward: (tgt: string) => void;
     }
  */
+
+exp('startPhoneCall', (player: string, number: string, isAnonymous = false) => {
+  emitNet('npwd:startPhoneCall', player, number, isAnonymous)
+});
+
 exp('onCall', (tgtNumber: string, cb: CallMiddlewareInvokable) => {
   const resourceName = GetInvokingResource()
   const handler = new CallMiddleware(cb, resourceName, tgtNumber.toString())

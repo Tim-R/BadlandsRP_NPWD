@@ -60,6 +60,10 @@ exps('startPhoneCall', (number: string, isAnonymous = false) => {
     initializeCallHandler({receiverNumber: number, isAnonymous});
 });
 
+onNet('npwd:startPhoneCall', (number: string, isAnonymous: boolean) => {
+  initializeCallHandler({receiverNumber: number, isAnonymous});
+});
+
 // Will automatically open the contacts app start the new contact process
 // filling in all of the fields with passed data. If this number already exists,
 // it will edit it.
@@ -102,10 +106,21 @@ exps('isInCall', () => {
 });
 
 exps('endCall', async () => {
-    if (callService.isInCall()) {
-        CallService.sendCallAction(CallEvents.END_CALL, null);
-        animationService.endPhoneCall();
-    }
+  if(!callService.isInCall()) {
+    return
+  }
+
+  CallService.sendCallAction(CallEvents.END_CALL, null);
+  animationService.endPhoneCall();
+});
+
+onNet('npwd:client:endCall', () => {
+  if(!callService.isInCall()) {
+    return
+  }
+
+  CallService.sendCallAction(CallEvents.END_CALL, null);
+  animationService.endPhoneCall();
 });
 
 // @deprecated Use `setPhoneVisible` instead

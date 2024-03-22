@@ -93,7 +93,10 @@ exp('isPlayerBusy', (src: number): boolean => {
   return PlayerService.isBusy(src);
 });
 
+exp('endPhoneCall', (src: number) => {
+  emitNet('npwd:client:endCall', src);
+});
 
 exp("isPhoneNumberBusy", (phoneNumber: string) => {
   return callsService.isPhoneNumberInCall(phoneNumber);
-})
+});
