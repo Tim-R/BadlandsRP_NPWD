@@ -28,7 +28,7 @@ const StyledMessage = styled('div')({
   display: '-webkit-box',
   overflow: 'hidden',
   boxOrient: 'vertical',
-  lineClamp: 2,
+  lineClamp: 3,
 });
 
 export type SystemNotificationBaseComponent = React.FC<SystemNotificationBaseProps>;

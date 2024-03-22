@@ -1,6 +1,7 @@
 import {
   atom,
   atomFamily,
+  selector,
   selectorFamily,
   useRecoilState,
   useRecoilValue,
@@ -50,6 +51,15 @@ export const barUncollapsed = atom<boolean>({
   default: false,
 });
 
+export const activeNotifications = selectorFamily<NPWDNotification[], string>({
+  key: 'npwd:activeNotifications',
+  get: (s: string) => ({ get }) => {
+    const allNotisIds = get(activeNotificationIds);
+
+    return allNotisIds.map((id: string) => get(notifications(id)))
+  },
+});
+
 export const notificationsForApp = selectorFamily<NPWDNotification[], string>({
   key: 'npwd:notificationsForApp',
   get:
@@ -75,6 +85,8 @@ export const unreadNotificationsForApp = selectorFamily<NPWDNotification[], stri
         .filter((n: NPWDNotification) => !n.isRead && n.appId === appId);
     },
 });
+
+export const useActiveNotifications = () => useRecoilValue(activeNotifications(''));
 
 /* Returns all notification IDs for the specified app ID */
 export const useNotificationsForApp = (appId: string) => useRecoilValue(notificationsForApp(appId));

@@ -59,7 +59,7 @@ const NotificationBase = forwardRef<HTMLDivElement, NotificationBaseProps>((prop
                     <p className="text-neutral-900 dark:text-neutral-50 text-sm">{secondaryTitle}</p>
                 </div>
             </div>
-            <div className="text-neutral-900 dark:text-neutral-50 text-base overflow-hidden line-clamp-2">
+            <div className="text-neutral-900 dark:text-neutral-50 text-base overflow-hidden line-clamp-4">
                 <p>{message}</p>
             </div>
         </SnackbarContent>

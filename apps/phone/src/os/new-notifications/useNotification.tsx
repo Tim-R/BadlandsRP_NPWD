@@ -97,7 +97,7 @@ export const useNotification = (): NotificationProps => {
           secondaryTitle,
           path,
           app,
-          autoHideDuration: 3000 || duration,
+          autoHideDuration: duration || 3000,
           disableWindowBlurListener: true,
         });
       },

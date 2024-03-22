@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import fetchNui from '@utils/fetchNui';
 import usePlayerData from '@os/phone/hooks/usePlayerData';
 import styled from '@emotion/styled';
-import { ServiceConfig, ServicePrecheckResp } from '@typings/services';
+import { ServiceAction, ServiceConfig, ServicePrecheckResp } from '@typings/services';
 import { phoneState } from '@os/phone/hooks/state';
 import { Modal2 } from '@ui/components';
 
@@ -18,12 +18,20 @@ import {
   ListItemText,
   Typography,
   Grid,
-  TextField
+  TextField,
+  Divider,
+  SelectChangeEvent,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio
 } from '@mui/material';
 
 import {
   Phone as PhoneIcon,
-  Chat as ChatIcon
+  Chat as ChatIcon,
+  Send as SendIcon
 } from '@mui/icons-material';
 
 const Container = styled(Paper)`
@@ -45,11 +53,14 @@ const Content = styled.div`
 `;
 
 const defaults = {
-  service: { name: 'Default', subtitle: 'Default', message: '' },
+  service: { name: 'Default', subtitle: 'Default', message: '', range: '', urgency: '' },
   message: '',
   serviceAvailable: false,
   serviceMessage: '',
   messageError: '',
+  factionAlert: false,
+  factionRange: 'around',
+  factionUrgency: 'emergency',
 }
 
 export const Services: React.FC = () => {
@@ -60,17 +71,19 @@ export const Services: React.FC = () => {
   const [serviceMessage, setServiceMessage] = useState(defaults.serviceMessage);
   const [message, setMessage] = useState(defaults.message);
   const [messageError, setMessageError] = useState(defaults.messageError);
+  const [factionAlert, setFactionAlert] = useState(defaults.factionAlert);
+  const [factionRange, setFactionRange] = useState(defaults.factionRange);
+  const [factionUrgency, setFactionUrgency] = useState(defaults.factionUrgency);
   const playerData = usePlayerData();
   const config = useRecoilValue(phoneState.resourceConfig);
 
-  const openModal = (service: any, available: boolean, message: string) => {
+  const openModal = (service: any, available: boolean, message: string, isFactionAlert = false) => {
     fetchNui('npwd:services:focus', { keepGameFocus: false });
     setService(service);
     setServiceAvailable(available);
     setServiceMessage(message);
+    setFactionAlert(isFactionAlert);
     setOpen(true);
-
-    console.log('playerData in npwd_services is', playerData)
   }
 
   const closeModal = () => {
@@ -78,6 +91,9 @@ export const Services: React.FC = () => {
     setService(defaults.service);
     setServiceAvailable(defaults.serviceAvailable);
     setServiceMessage(defaults.serviceMessage);
+    setFactionAlert(defaults.factionAlert);
+    setFactionRange(defaults.factionRange);
+    setFactionUrgency(defaults.factionUrgency);
     setMessage(defaults.message);
     setMessageError(defaults.messageError);
   }
@@ -87,7 +103,15 @@ export const Services: React.FC = () => {
     setMessageError(defaults.messageError);
   }
 
-  const sendMessage = () => {
+  const handleRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFactionRange((event.target as HTMLInputElement).value);
+  }
+
+  const handleUrgencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFactionUrgency((event.target as HTMLInputElement).value);
+  }
+
+  const submitModal = () => {
     if(message === "") {
       setMessageError("You must enter a message to send");
       return
@@ -96,11 +120,19 @@ export const Services: React.FC = () => {
     let service = selectedService;
     service.message = message;
 
+    let event = 'npwd:services:selectService'
+
+    if(factionAlert) {
+      event = 'npwd:services:sendAlert'
+      service.range = factionRange;
+      service.urgency = factionUrgency;
+    }
+
     closeModal();
 
     history.push('/');
 
-    fetchNui('npwd:services:selectService', { service });
+    fetchNui(event, { service });
   };
 
   const handleSelectService = (service: any) => {
@@ -139,11 +171,56 @@ export const Services: React.FC = () => {
     ));
   });
 
+  const handleSelectAction = (action: ServiceAction) => {
+    if(action.message) {
+      setMessage(action.message);
+    }
+
+    if(action.range) {
+      setFactionRange(action.range);
+    }
+
+    if(action.urgency) {
+      setFactionUrgency(action.urgency);
+    }
+
+    openModal(action, true, '', true);
+  }
+
+  const factionActions = [];
+
+  config.services.factionActions.forEach((action: ServiceAction) => {
+    if(action.groups.some(g => playerData.groups.includes(g))) {
+      factionActions.push((
+        <ListItem
+          secondaryAction={
+            <IconButton
+              onClick={() => handleSelectAction(action) }
+            >
+              <SendIcon />
+            </IconButton>
+          }
+        >
+          <ListItemText
+            primaryTypographyProps={{
+              color: '#fff',
+              fontWeight: 'bold',
+            }}
+            primary={`${action.icon} ${action.name}`}
+            secondary={action.subtitle}
+          />
+        </ListItem>
+      ));
+    }
+  });
+
   return (
       <ServicesThemeProvider>
         <Container square elevation={0}>
           <Content>
             <List>
+              {factionActions}
+              {factionActions.length > 0 && <Divider></Divider>}
               {serviceElements}
             </List>
 
@@ -156,7 +233,40 @@ export const Services: React.FC = () => {
                 fullWidth
                 sx={{ mb: 1 }}
                 onChange={onChange}
+                value={message}
               />
+              }
+
+              { factionAlert &&
+              <FormControl>
+                <FormLabel id="urgency-label">Urgency</FormLabel>
+                <RadioGroup
+                  aria-labelledby="urgency-label"
+                  defaultValue="around"
+                  name="radio-buttons-group"
+                  onChange={handleUrgencyChange}
+                  value={factionUrgency}
+                >
+                  <FormControlLabel value="notice" control={<Radio />} label="Notice (non urgent)" />
+                  <FormControlLabel value="emergency" control={<Radio />} label="Emergency (urgent)" />
+                </RadioGroup>
+              </FormControl>
+              }
+
+              { factionAlert &&
+              <FormControl>
+                <FormLabel id="range-label">Range</FormLabel>
+                <RadioGroup
+                  aria-labelledby="range-label"
+                  defaultValue="around"
+                  name="radio-buttons-group"
+                  onChange={handleRangeChange}
+                  value={factionRange}
+                >
+                  <FormControlLabel value="around" control={<Radio />} label="Around Me" />
+                  <FormControlLabel value="anywhere" control={<Radio />} label="Anywhere" />
+                </RadioGroup>
+              </FormControl>
               }
 
               { !serviceAvailable &&
@@ -174,7 +284,7 @@ export const Services: React.FC = () => {
               <Grid container justifyContent="flex-end">
                 { serviceAvailable &&
                 <Button
-                  onClick={() => sendMessage() }
+                  onClick={() => submitModal() }
                   variant="outlined"
                   color="success"
                   sx={{ mr: 2 }}

@@ -17,6 +17,11 @@ RegisterNuiCB('npwd:soundMenuAccept', () => {
   sound.play();
 });
 
+RegisterNuiCB('npwd:soundEmergencyAlert', () => {
+  const sound = new Sound('Out_Of_Bounds_Timer', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS')
+  sound.play();
+})
+
 RegisterNuiCB('npwd:onNotificationConfirm', (notisId, cb) => {
   const funcRef = NotificationFuncRefs.get(`${notisId}:confirm`);
   if (!funcRef)
