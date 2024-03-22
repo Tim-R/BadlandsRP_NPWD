@@ -8,10 +8,12 @@ import useMessages from '@apps/messages/hooks/useMessages';
 import LogDebugEvent from '@os/debug/LogDebugEvents';
 import { useContactActions } from '@apps/contacts/hooks/useContactActions';
 import { useMyPhoneNumber } from '@os/simcard/hooks/useMyPhoneNumber';
-import { Phone, MessageSquare, Plus } from 'lucide-react';
+import { Phone, MessageSquare, Plus, Share } from 'lucide-react';
 import { List, ListItem, NPWDButton } from '@npwd/keyos';
 import { initials } from '@utils/misc';
 import { useQueryParams } from '@common/hooks/useQueryParams';
+import fetchNui from '@utils/fetchNui';
+import { ServerPromiseResp } from '@typings/common';
 
 export const ContactList: React.FC = () => {
   const filteredContacts = useFilteredContacts();
@@ -78,6 +80,12 @@ const ContactItem = ({ number, avatar, id, display }: ContactItemProps) => {
   const myPhoneNumber = useMyPhoneNumber();
   const history = useHistory();
 
+  const shareContact = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    fetchNui<ServerPromiseResp>('npwd:contacts:share', { number: number, avatar: avatar, display: display });
+  };
+
   const startCall = (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -134,6 +142,12 @@ const ContactItem = ({ number, avatar, id, display }: ContactItemProps) => {
             </div>
           </div>
           <div className="space-x-3">
+            <button
+              onClick={shareContact}
+              className="rounded-full bg-orange-100 p-3 text-orange-500 hover:bg-orange-200 dark:bg-orange-900/30 dark:hover:bg-neutral-700"
+            >
+              <Share size={20} />
+            </button>
             <button
               onClick={startCall}
               className="rounded-full bg-green-100 p-3 text-green-500 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-neutral-700"

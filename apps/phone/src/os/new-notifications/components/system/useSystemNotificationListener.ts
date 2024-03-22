@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import { useRecoilCallback } from 'recoil';
 import uuid from 'react-uuid';
 import { useNotification } from '@os/new-notifications/useNotification';
+import fetchNui from '../../../../utils/fetchNui';
 
 export const useSystemNotificationListener = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -18,6 +19,10 @@ export const useSystemNotificationListener = () => {
         if (curNotis.includes(uniqID)) {
           console.error(`Notification with key: [${uniqID}] already exists!`);
           return;
+        }
+
+        if(dto.sound) {
+          fetchNui(dto.sound);
         }
 
         // TODO: We might want add this to unread as well, hmm - not sure how

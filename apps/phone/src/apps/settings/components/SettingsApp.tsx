@@ -29,6 +29,7 @@ import {
   ZoomIn,
   ListFilter,
   Eraser,
+  Share,
 } from 'lucide-react';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTheme } from '@mui/material';
@@ -42,6 +43,7 @@ import { IconSetObject } from '@typings/settings';
 import { useCustomWallpaperModal } from '../state/customWallpaper.state';
 import fetchNui from '@utils/fetchNui';
 import { SettingEvents } from '@typings/settings';
+import { ServerPromiseResp } from '@typings/common';
 
 const useStyles = makeStyles({
   backgroundModal: {
@@ -149,13 +151,7 @@ export const SettingsApp: React.FC = () => {
   };
 
   const handleCopyPhoneNumber = () => {
-    setClipboard(myNumber);
-    addAlert({
-      message: t('GENERIC.WRITE_TO_CLIPBOARD_MESSAGE', {
-        content: 'number',
-      }),
-      type: 'success',
-    });
+    fetchNui<ServerPromiseResp>('npwd:contacts:shareMyself', { number: myNumber });
   };
 
   const [openMenu, closeMenu, ContextMenu, isMenuOpen] = useContextMenu();
@@ -192,7 +188,7 @@ export const SettingsApp: React.FC = () => {
                 content: 'number',
               })}
               Icon={Phone}
-              actionIcon={<FileCopy />}
+              actionIcon={<Share />}
               handleAction={handleCopyPhoneNumber}
               theme={theme}
             />

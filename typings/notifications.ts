@@ -44,4 +44,5 @@ export type SystemNotificationDTO = {
   onConfirm?: () => void;
   onCancel?: () => void;
   controls?: boolean;
+  sound?: string;
 };

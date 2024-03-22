@@ -173,6 +173,17 @@ RegisterNuiCB<{ keepGameFocus: boolean }>(
   },
 );
 
+RegisterNuiCB<{ number: string, avatar: string, display: string }>('npwd:contacts:share', async({ number, avatar, display }, cb) => {
+  await hidePhone();
+  emitNet('npwd:server:shareContact', number, avatar, display);
+  cb({});
+});
+
+RegisterNuiCB<{ number: string }>('npwd:contacts:shareMyself', async({ number }, cb) => {
+  await hidePhone();
+  emitNet('npwd:server:shareMyself');
+  cb({});
+});
 
 // If you want to remove controls from a external application this is the way to do it.
 // chip - commenting this out because it crashed the phone for some reason, even though it's not used anywhere??? like...we dont emit it

@@ -12,6 +12,11 @@ RegisterNuiCB(AlertEvents.PLAY_ALERT, () => {
   sound.play();
 });
 
+RegisterNuiCB('npwd:soundMenuAccept', () => {
+  const sound = new Sound('Menu_Accept', 'Phone_SoundSet_Default')
+  sound.play();
+});
+
 RegisterNuiCB('npwd:onNotificationConfirm', (notisId, cb) => {
   const funcRef = NotificationFuncRefs.get(`${notisId}:confirm`);
   if (!funcRef)
