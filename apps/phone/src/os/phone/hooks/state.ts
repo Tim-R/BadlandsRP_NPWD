@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { ResourceConfig } from '@typings/config';
+import { PhonePlayerData } from '@typings/phone';
 
 export const phoneState = {
   visibility: atom<boolean>({
@@ -12,6 +13,10 @@ export const phoneState = {
   }),
   phoneTime: atom<string>({
     key: 'phoneTime',
+    default: null,
+  }),
+  playerData: atom<PhonePlayerData>({
+    key: 'playerData',
     default: null,
   }),
   isPhoneDisabled: atom<boolean>({

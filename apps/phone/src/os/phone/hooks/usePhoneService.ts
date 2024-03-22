@@ -15,6 +15,7 @@ export const usePhoneService = () => {
   const setVisibility = useSetRecoilState(phoneState.visibility);
   const setResourceConfig = useSetRecoilState(phoneState.resourceConfig);
   const setPhoneTime = useSetRecoilState(phoneState.phoneTime);
+  const setPlayerData = useSetRecoilState(phoneState.playerData);
   const setIsPhoneDisabled = useSetRecoilState(phoneState.isPhoneDisabled);
   const setPlayerSource = useSetRecoilState(phoneState.playerSource);
   const setIdentifier = useSetRecoilState(phoneState.playerIdentifier);
@@ -39,6 +40,7 @@ export const usePhoneService = () => {
   useNuiEvent('PHONE', PhoneEvents.SET_VISIBILITY, setVisibility);
   useNuiEvent('PHONE', PhoneEvents.SET_CONFIG, setResourceConfig);
   useNuiEvent('PHONE', PhoneEvents.SET_TIME, setPhoneTime);
+  useNuiEvent('PHONE', PhoneEvents.SET_PLAYER_DATA, setPlayerData);
   useNuiEvent<string>('PHONE', PhoneEvents.OPEN_APP, handleOpenApp);
   useNuiEvent('PHONE', PhoneEvents.IS_PHONE_DISABLED, setIsPhoneDisabled);
   useNuiEvent('PHONE', PhoneEvents.SEND_PLAYER_SOURCE, setPlayerSource);

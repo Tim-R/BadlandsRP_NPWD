@@ -10,6 +10,7 @@ import { MarketplaceApp } from '@apps/marketplace/components/MarketplaceApp';
 import { NotesApp } from '@apps/notes/NotesApp';
 import CameraApp from '@apps/camera/components/CameraApp';
 import { AppRoute } from '../components/AppRoute';
+import { ServicesApp } from '@apps/services/components/ServicesApp';
 
 import {
   MESSAGES_APP_PRIMARY_COLOR,
@@ -180,6 +181,14 @@ export const APPS: IAppConfig[] = [
     color: common.white,
     path: '/camera',
     Route: () => <AppRoute id="CAMERA" path="/camera" component={CameraApp} emitOnOpen={false} />,
+  },
+  {
+    id: 'SERVICES',
+    nameLocale: 'APPS_SERVICES',
+    backgroundColor: '#EA7F1E',
+    color: '#FFF',
+    path: '/services',
+    Route: () => <AppRoute id="SERVICES" path="/services" component={ServicesApp} emitOnOpen={false} />,
   },
 ];
 

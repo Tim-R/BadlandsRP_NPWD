@@ -16,6 +16,7 @@ export enum PhoneEvents {
   SET_PHONE_READY = 'npwd:phoneReady',
   SET_CONFIG = 'npwd:setPhoneConfig',
   SET_TIME = 'npwd:setGameTime',
+  SET_PLAYER_DATA = 'npwd:setPlayerData',
   SEND_CREDENTIALS = 'npwd:sendCredentials',
   FETCH_CREDENTIALS = 'npwd:getCredentials',
   TOGGLE_KEYS = 'npwd:toggleAllControls',
@@ -46,4 +47,16 @@ export interface FxServerResponse {
   status: 'success' | 'failure';
   app: string;
   error?: FxServerRespError;
+}
+
+export interface PhonePlayerData {
+  id: number,
+  groups: string[],
+  permissions: string[],
+  aptitudes: Aptitude[]
+}
+
+export interface Aptitude {
+  id: string,
+  level: number
 }

@@ -1,3 +1,5 @@
+import { ServicesConfig } from "./services";
+
 interface TwitterConfig {
   showNotifications: boolean;
   generateProfileNameFromUsers: boolean;
@@ -141,4 +143,5 @@ export interface ResourceConfig {
   appSort: string[];
   voiceMessage: VoiceMessageConfig;
   contacts: Contacts;
+  services: ServicesConfig
 }

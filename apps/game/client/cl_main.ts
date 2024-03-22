@@ -62,6 +62,8 @@ const getCurrentGameTime = () => {
  * * * * * * * * * * * * */
 
 export const showPhone = async (): Promise<void> => {
+  let playerData = await exps['blrp_core']['npwdGetPlayerData']();
+
   global.isPhoneOpen = true;
   const time = getCurrentGameTime();
   await animationService.openPhone(); // Animation starts before the phone is open
@@ -69,6 +71,7 @@ export const showPhone = async (): Promise<void> => {
   SetCursorLocation(0.9, 0.922); //Experimental
   sendMessage('PHONE', PhoneEvents.SET_VISIBILITY, true);
   sendMessage('PHONE', PhoneEvents.SET_TIME, time);
+  sendMessage('PHONE', PhoneEvents.SET_PLAYER_DATA, playerData)
   SetNuiFocus(true, true);
   SetNuiFocusKeepInput(true);
   emit('npwd:disableControlActions', true);
