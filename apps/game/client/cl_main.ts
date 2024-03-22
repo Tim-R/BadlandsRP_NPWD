@@ -88,24 +88,15 @@ export const hidePhone = async (): Promise<void> => {
  *  Register Command and Keybinding
  *
  * * * * * * * * * * * * */
-RegisterCommand(
-  config.general.toggleCommand,
-  async () => {
-    //-- Toggles Phone
-    // Check to see if the phone is marked as disabled
-    if (!global.isPhoneDisabled && !IsPauseMenuActive()) await togglePhone();
-  },
-  false,
-);
 
-RegisterCommand(
-  'phone:restart',
-  async () => {
-    await hidePhone();
-    sendMessage('PHONE', 'phoneRestart', {});
-  },
-  false,
-);
+on('npwd:togglePhone', () => {
+  if (!global.isPhoneDisabled && !IsPauseMenuActive()) togglePhone();
+});
+
+on('blrp:refreshnui', () => {
+  hidePhone();
+  sendMessage('PHONE', 'phoneRestart', {});
+});
 
 /* * * * * * * * * * * * *
  *
