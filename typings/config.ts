@@ -1,4 +1,5 @@
 import { ServicesConfig } from "./services";
+import { AdvertisementsConfig } from "./advertisements";
 
 interface TwitterConfig {
   showNotifications: boolean;
@@ -143,5 +144,6 @@ export interface ResourceConfig {
   appSort: string[];
   voiceMessage: VoiceMessageConfig;
   contacts: Contacts;
-  services: ServicesConfig
+  services: ServicesConfig;
+  advertisements: AdvertisementsConfig;
 }

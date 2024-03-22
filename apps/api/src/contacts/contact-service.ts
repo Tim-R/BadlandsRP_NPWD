@@ -17,8 +17,6 @@ export class ContactService {
   }
 
   async addContact(contact: Contact): Promise<Contact> {
-    console.log('CONTACT', contact);
-
     try {
       const newContact = await this._contactDB.addContact(PLAYER_IDENITIFER, contact);
       return newContact;

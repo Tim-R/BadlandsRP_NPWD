@@ -43,6 +43,7 @@ import {
   DARKCHAT_APP_TEXT_COLOR,
 } from '@apps/darkchat/darkchat.theme';
 import DarkChatApp from '../../../apps/darkchat/DarkChatApp';
+import { AdvertisementsApp } from '@apps/advertisements/components/AdvertisementsApp';
 
 export interface IAppConfig {
   id: string;
@@ -189,6 +190,14 @@ export const APPS: IAppConfig[] = [
     color: '#FFF',
     path: '/services',
     Route: () => <AppRoute id="SERVICES" path="/services" component={ServicesApp} emitOnOpen={false} />,
+  },
+  {
+    id: 'ADVERTISEMENTS',
+    nameLocale: 'APPS_ADVERTISEMENTS',
+    backgroundColor: '#048D79',
+    color: '#FFF',
+    path: '/advertisements',
+    Route: () => <AppRoute id="ADVERTISEMENTS" path="/advertisements" component={AdvertisementsApp} emitOnOpen={false} />,
   },
 ];
 
