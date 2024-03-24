@@ -253,6 +253,37 @@ class _PlayerService {
     emitNet(PhoneEvents.SET_PLAYER_LOADED, src, false);
     playerLogger.info(`Unloaded NPWD Player, source: (${src})`);
   }
+
+  // blrp_core hooks below
+  character(source: number) {
+    return exports['blrp_core']['character'](source);
+  }
+
+  getGroups(source: number): string[] {
+    let groups = this.character(source).getGroups();
+
+    if(!groups) {
+      groups = {}
+    }
+
+    return Object.keys(groups);
+  }
+
+  async tryTakeBankMoney(source: number, amount: number): Promise<boolean> {
+    return await this.character(source).tryTakeBankMoney(amount);
+  }
+
+  log(source: number, logType: string, message: string, context?: any): void {
+    this.character(source).log(logType, message, context);
+  }
+
+  getCharacterId(source: number): number {
+    return Number(this.character(source).get('id'));
+  }
+
+  getCharacterName(source: number): string {
+    return this.character(source).get('fullname');
+  }
 }
 
 const PlayerService = new _PlayerService();

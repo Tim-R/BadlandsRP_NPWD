@@ -36,6 +36,7 @@ import { useDarkchatService } from './apps/darkchat/hooks/useDarkchatService';
 import { useNotificationListener } from '@os/new-notifications/useNotificationListener';
 import { useSystemNotificationListener } from '@os/new-notifications/components/system/useSystemNotificationListener';
 import { useNotificationBarListener } from '@os/new-notifications/useNotificationBarListener';
+import { useAdvertisementsService } from '@apps/advertisements/hooks/useAdvertisementsService';
 
 interface PhoneProps {
   notiRefCB: Dispatch<SetStateAction<HTMLElement>>;
@@ -68,6 +69,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
   useNotificationListener();
   useSystemNotificationListener();
   useNotificationBarListener();
+  useAdvertisementsService();
   useTwitterService();
   useMatchService();
   useMarketplaceService();

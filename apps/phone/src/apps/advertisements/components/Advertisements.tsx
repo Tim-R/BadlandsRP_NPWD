@@ -1,39 +1,34 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { AdvertisementsThemeProvider } from '../providers/AdvertisementsThemeProvider';
 import { useRecoilValue } from 'recoil';
 import fetchNui from '@utils/fetchNui';
-import usePlayerData from '@os/phone/hooks/usePlayerData';
 import styled from '@emotion/styled';
-import { ServiceAction, ServiceConfig, ServicePrecheckResp } from '@typings/services';
 import { phoneState } from '@os/phone/hooks/state';
 import { Modal2 } from '@ui/components';
-
+import { useAdvertisementsValue, useModalAcceptTextValue, useModalAction, useModalOpenValue, useModalTextValue, useSetModalAcceptText, useSetModalAction, useSetModalOpen, useSetModalText } from '../hooks/state';
+import { AdvertisementItem } from './AdvertisementItem';
+import { Advertisement } from '@typings/advertisements';
+import { CommonEvents, ServerPromiseResp, Vector } from '@typings/common';
+import { AdvertisementsEvents } from '@typings/advertisements';
+import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
+import usePlayerData from '@os/phone/hooks/usePlayerData';
+import { useMyPhoneNumber } from '@os/simcard/hooks/useMyPhoneNumber';
 import {
-  List,
-  ListItem,
   Button,
   Paper,
-  IconButton,
-  ListItemText,
   Typography,
   Grid,
-  TextField,
-  Divider,
-  SelectChangeEvent,
-  FormControl,
-  FormLabel,
-  RadioGroup,
+  FormGroup,
   FormControlLabel,
-  Radio
+  Switch,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  FormHelperText,
+  OutlinedInput,
+  SelectChangeEvent,
 } from '@mui/material';
-
-import {
-  Phone as PhoneIcon,
-  Chat as ChatIcon,
-  Send as SendIcon
-} from '@mui/icons-material';
-import { useAdvertisementsValue } from '../hooks/state';
 
 const Container = styled(Paper)`
   flex: 1;
@@ -53,255 +48,290 @@ const Content = styled.div`
   overflow: auto;
 `;
 
-const defaults = {
-  service: { name: 'Default', subtitle: 'Default', message: '', range: '', urgency: '' },
-  message: '',
-  serviceAvailable: false,
-  serviceMessage: '',
-  messageError: '',
-  factionAlert: false,
-  factionRange: 'around',
-  factionUrgency: 'emergency',
-}
-
 export const Advertisements: React.FC = () => {
-  const history = useHistory();
-  const [open, setOpen] = useState(false);
-  const [selectedService, setService] = useState(defaults.service);
-  const [serviceAvailable, setServiceAvailable] = useState(defaults.serviceAvailable);
-  const [serviceMessage, setServiceMessage] = useState(defaults.serviceMessage);
-  const [message, setMessage] = useState(defaults.message);
-  const [messageError, setMessageError] = useState(defaults.messageError);
-  const [factionAlert, setFactionAlert] = useState(defaults.factionAlert);
-  const [factionRange, setFactionRange] = useState(defaults.factionRange);
-  const [factionUrgency, setFactionUrgency] = useState(defaults.factionUrgency);
-  const playerData = usePlayerData();
   const config = useRecoilValue(phoneState.resourceConfig);
+  const playerData = usePlayerData();
   const advertisements = useAdvertisementsValue();
+  const { addAlert } = useSnackbar();
 
-  console.log('advertisements are', advertisements);
+  /* Utils */
+  const getLocation = async () => {
+    let r = await fetchNui<Location>(CommonEvents.GET_LOCATION);
 
-  const openModal = (service: any, available: boolean, message: string, isFactionAlert = false) => {
-    fetchNui('npwd:services:focus', { keepGameFocus: false });
-    setService(service);
-    setServiceAvailable(available);
-    setServiceMessage(message);
-    setFactionAlert(isFactionAlert);
-    setOpen(true);
+    return r;
   }
 
-  const closeModal = () => {
-    setOpen(false);
-    setService(defaults.service);
-    setServiceAvailable(defaults.serviceAvailable);
-    setServiceMessage(defaults.serviceMessage);
-    setFactionAlert(defaults.factionAlert);
-    setFactionRange(defaults.factionRange);
-    setFactionUrgency(defaults.factionUrgency);
-    setMessage(defaults.message);
-    setMessageError(defaults.messageError);
-  }
+  const myPhoneNumber = useMyPhoneNumber();
 
-  const onChange = (event: any) => {
-    setMessage(event.target.value);
-    setMessageError(defaults.messageError);
-  }
+  /* Modal stuff */
+  const modalOpen = useModalOpenValue();
+  const setModalOpen = useSetModalOpen();
 
-  const handleRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFactionRange((event.target as HTMLInputElement).value);
-  }
+  const modalText = useModalTextValue();
+  const setModalText = useSetModalText();
 
-  const handleUrgencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFactionUrgency((event.target as HTMLInputElement).value);
-  }
+  const modalAcceptText = useModalAcceptTextValue();
+  const setModalAcceptText = useSetModalAcceptText();
 
-  const submitModal = () => {
-    if(message === "") {
-      setMessageError("You must enter a message to send");
-      return
+  const modalAction = useModalAction();
+  const setModalAction = useSetModalAction();
+
+  const [modalAdvertisement, setModalAdvertisement] = useState<Advertisement>();
+
+  const [modalBodyText, setModalBodyText] = useState('');
+  const onChangeModalBodyText = (e: ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value;
+
+    if(text.length > config.advertisements.maxLength) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
     }
 
-    let service = selectedService;
-    service.message = message;
+    setModalBodyText(text);
+  };
 
-    let event = 'npwd:services:selectService'
+  const [modalPhoneChecked, setModalPhoneChecked] = useState(false);
+  const onChangeModalPhoneChecked = (e: ChangeEvent<HTMLInputElement>) => setModalPhoneChecked(e.target.checked);
 
-    if(factionAlert) {
-      event = 'npwd:services:sendAlert'
-      service.range = factionRange;
-      service.urgency = factionUrgency;
+  const [modalLocationChecked, setModalLocationChecked] = useState(false);
+  const onChangeModalLocationChecked = (e: ChangeEvent<HTMLInputElement>) => setModalLocationChecked(e.target.checked);
+
+  const [modalBusiness, setModalBusiness] = useState('');
+  const onChangeModalBusiness = (e: SelectChangeEvent<string>) => setModalBusiness(e.target.value);
+
+  const closeModal = () => {
+    setModalOpen(false);
+  }
+
+  const [bodyCharsRemaining, setBodyCharsRemaining] = useState(0);
+
+  useEffect(() => {
+    setBodyCharsRemaining(config.advertisements.maxLength - modalBodyText.length);
+  }, [modalBodyText]);
+
+  useEffect(() => {
+    if(!modalOpen) return;
+
+    fetchNui('npwd:services:focus', { keepGameFocus: false });
+  }, [modalOpen]);
+
+  const handleAdvertisementAction = (advertisement: Advertisement, action: string) => {
+    switch(action) {
+      case 'bump': {
+        setModalText(`Pay $${config.advertisements.priceBump} to bump advertisement?`);
+        setModalAcceptText(`Pay $${config.advertisements.priceBump}`);
+        setModalAction(action);
+        setModalAdvertisement(advertisement);
+        setModalOpen(true);
+
+        break;
+      }
+
+      case 'delete': {
+        setModalText(`Delete advertisement?`);
+        setModalAcceptText(`Delete advertisement`)
+        setModalAction(action);
+        setModalAdvertisement(advertisement);
+        setModalOpen(true);
+
+        break;
+      }
+
+      case 'edit': {
+        setModalText(`Edit advertisement`);
+        setModalAcceptText(`Edit`)
+        setModalAction(action);
+        setModalAdvertisement(advertisement);
+
+        setModalBodyText(advertisement.body);
+        setModalBusiness(advertisement.business);
+        setModalPhoneChecked(advertisement.phone !== null);
+        setModalLocationChecked(advertisement.location !== null);
+
+        setModalOpen(true);
+
+        break;
+      }
+    }
+  }
+
+  const finalizeAction = async () => {
+    switch(modalAction) {
+      case 'bump': {
+        if(!modalAdvertisement) {
+          return;
+        }
+
+        fetchNui<ServerPromiseResp<void>>(AdvertisementsEvents.BUMP_AD, { adId: modalAdvertisement.id }).then((resp) => {
+          if(resp.status !== 'ok') {
+            return addAlert({
+              message: resp.errorMsg,
+              type: 'error',
+            });
+          }
+
+          return addAlert({
+            message: 'Advertisement bumped',
+            type: 'success',
+          });
+        });
+
+        break;
+      }
+
+      case 'delete': {
+        fetchNui<ServerPromiseResp<void>>(AdvertisementsEvents.DELETE_AD, { adId: modalAdvertisement.id }).then((resp) => {
+          if(resp.status !== 'ok') {
+            return addAlert({
+              message: resp.errorMsg,
+              type: 'error',
+            });
+          }
+
+          return addAlert({
+            message: 'Advertisement deleted',
+            type: 'success',
+          });
+        });
+
+        break;
+      }
+
+      case 'edit': {
+        fetchNui<ServerPromiseResp<void>>(AdvertisementsEvents.EDIT_AD, {
+          adId: modalAdvertisement.id,
+          business: modalBusiness !== '' ? modalBusiness : null,
+          body: modalBodyText,
+          phone: modalPhoneChecked ? myPhoneNumber : null,
+          location: modalLocationChecked ? (await getLocation()) : null,
+        }).then((resp) => {
+          if(resp.status !== 'ok') {
+            return addAlert({
+              message: resp.errorMsg,
+              type: 'error',
+            });
+          }
+
+          return addAlert({
+            message: 'Advertisement edited',
+            type: 'success',
+          });
+        });
+
+        break;
+      }
+
+      case 'create': {
+        fetchNui<ServerPromiseResp<void>>(AdvertisementsEvents.CREATE_AD, {
+          business: modalBusiness !== '' ? modalBusiness : null,
+          body: modalBodyText,
+          phone: modalPhoneChecked ? myPhoneNumber : null,
+          location: modalLocationChecked ? (await getLocation()) : null,
+        }).then((resp) => {
+          if(resp.status !== 'ok') {
+            return addAlert({
+              message: resp.errorMsg,
+              type: 'error',
+            });
+          }
+
+          return addAlert({
+            message: 'Advertisement edited',
+            type: 'success',
+          });
+        });
+
+        break;
+      }
     }
 
     closeModal();
-
-    history.push('/');
-
-    fetchNui(event, { service });
-  };
-
-  const handleSelectService = (service: any) => {
-    fetchNui<ServicePrecheckResp>('npwd:services:messagePrecheck', { service }).then(resp => {
-      if(service.action === 'message' || !resp.available) {
-        openModal(service, resp.available, resp.message);
-      } else {
-        fetchNui('npwd:services:selectService', { service });
-      }
-    });
-  };
-
-  const serviceElements = [];
-
-  config.services.items.forEach((service: ServiceConfig) => {
-    serviceElements.push((
-      <ListItem
-        secondaryAction={
-          <IconButton
-          onClick={() => handleSelectService(service) }
-          >
-            { service.action == 'call' && <PhoneIcon /> }
-            { service.action == 'message' && <ChatIcon /> }
-          </IconButton>
-        }
-      >
-        <ListItemText
-          primaryTypographyProps={{
-            color: '#fff',
-            fontWeight: 'bold',
-          }}
-          primary={`${service.icon} ${service.name}`}
-          secondary={service.subtitle}
-        />
-      </ListItem>
-    ));
-  });
-
-  const handleSelectAction = (action: ServiceAction) => {
-    if(action.message) {
-      setMessage(action.message);
-    }
-
-    if(action.range) {
-      setFactionRange(action.range);
-    }
-
-    if(action.urgency) {
-      setFactionUrgency(action.urgency);
-    }
-
-    openModal(action, true, '', true);
   }
-
-  const factionActions = [];
-
-  config.services.factionActions.forEach((action: ServiceAction) => {
-    if(action.groups.some(g => playerData.groups.includes(g))) {
-      factionActions.push((
-        <ListItem
-          secondaryAction={
-            <IconButton
-              onClick={() => handleSelectAction(action) }
-            >
-              <SendIcon />
-            </IconButton>
-          }
-        >
-          <ListItemText
-            primaryTypographyProps={{
-              color: '#fff',
-              fontWeight: 'bold',
-            }}
-            primary={`${action.icon} ${action.name}`}
-            secondary={action.subtitle}
-          />
-        </ListItem>
-      ));
-    }
-  });
 
   return (
       <AdvertisementsThemeProvider>
         <Container square elevation={0}>
-          <Content>
-            <List>
-              {factionActions}
-              {factionActions.length > 0 && <Divider></Divider>}
-              {serviceElements}
-            </List>
+          <Content className="h-full">
+            {advertisements.length == 0 &&
+              <div className="flex flex-col grow items-center justify-center">
+                <Typography variant="h6">No recent advertisements</Typography>
+              </div>
+            }
 
-            <Modal2 visible={open} handleClose={() => {}}>
-              { serviceAvailable &&
-              <TextField
-                label={`${selectedService.name} - ${selectedService.subtitle}`}
-                multiline
-                rows={4}
-                fullWidth
-                sx={{ mb: 1 }}
-                onChange={onChange}
-                value={message}
-              />
+            {advertisements.length > 0 &&
+              <div className="flex flex-col">
+                {[...advertisements]
+                  .sort((a, b) => {
+                    return b.bumpedAt - a.bumpedAt;
+                  })
+                  .map((advertisement) => {
+                    return <AdvertisementItem advertisement={advertisement} actionHandler={handleAdvertisementAction} />
+                  })
+                }
+              </div>
+            }
+
+            <Modal2 visible={modalOpen} handleClose={() => {}}>
+              <Typography sx={{ mb: 2 }}>{modalText}</Typography>
+
+              {(modalAction == 'create' || modalAction == 'edit') &&
+                <FormControl fullWidth sx={{ mb: 1 }}>
+                  <TextField
+                    label={`Advertisement`}
+                    multiline
+                    rows={4}
+                    fullWidth
+                    onChange={onChangeModalBodyText}
+                    value={modalBodyText}
+                  />
+                  <FormHelperText >Characters remaining: {bodyCharsRemaining}</FormHelperText>
+                </FormControl>
+
               }
 
-              { factionAlert &&
-              <FormControl>
-                <FormLabel id="urgency-label">Urgency</FormLabel>
-                <RadioGroup
-                  aria-labelledby="urgency-label"
-                  defaultValue="around"
-                  name="radio-buttons-group"
-                  onChange={handleUrgencyChange}
-                  value={factionUrgency}
-                >
-                  <FormControlLabel value="notice" control={<Radio />} label="Notice (non urgent)" />
-                  <FormControlLabel value="emergency" control={<Radio />} label="Emergency (urgent)" />
-                </RadioGroup>
-              </FormControl>
+              {((modalAction == 'create' || modalAction == 'edit') && playerData.businesses.length > 0) &&
+                <FormControl sx={{ mb: 1 }}>
+                  <InputLabel htmlFor="business-select">Business</InputLabel>
+                  <Select
+                    native
+                    value={modalBusiness}
+                    onChange={onChangeModalBusiness}
+                    input={<OutlinedInput label="Business" id="business-select" />}
+                  >
+                    <option value=""></option>
+                    {[...playerData.businesses]
+                      .sort((a, b) => {
+                        return a.name.localeCompare(b.name);
+                      })
+                      .map((business) => (
+                      <option value={business.name}>{business.name}</option>
+                    ))}
+                  </Select>
+                  <FormHelperText>If you set a business, anyone in this business will be able to bump / edit / delete this ad</FormHelperText>
+                </FormControl>
               }
 
-              { factionAlert &&
-              <FormControl>
-                <FormLabel id="range-label">Range</FormLabel>
-                <RadioGroup
-                  aria-labelledby="range-label"
-                  defaultValue="around"
-                  name="radio-buttons-group"
-                  onChange={handleRangeChange}
-                  value={factionRange}
-                >
-                  <FormControlLabel value="around" control={<Radio />} label="Around Me" />
-                  <FormControlLabel value="anywhere" control={<Radio />} label="Anywhere" />
-                </RadioGroup>
-              </FormControl>
-              }
-
-              { !serviceAvailable &&
-              <Typography id="modal-modal-description" sx={{ mb: 2 }}>
-                {serviceMessage}
-              </Typography>
-              }
-
-              { messageError !== "" &&
-              <Typography id="modal-modal-description" sx={{ mb: 1, color: 'error.main' }}>
-                {messageError}
-              </Typography>
+              {(modalAction == 'create' || modalAction == 'edit') &&
+                <FormGroup>
+                  <FormControlLabel control={<Switch checked={modalPhoneChecked} onChange={onChangeModalPhoneChecked} />} label="Include my phone number" />
+                  <FormControlLabel control={<Switch checked={modalLocationChecked} onChange={onChangeModalLocationChecked} />} label="Include my location" />
+                </FormGroup>
               }
 
               <Grid container justifyContent="flex-end">
-                { serviceAvailable &&
-                <Button
-                  onClick={() => submitModal() }
-                  variant="outlined"
-                  color="success"
-                  sx={{ mr: 2 }}
-                >
-                  Send
-                </Button>
-                }
+                <Button onClick={closeModal}>Close</Button>
 
-                <Button
-                  onClick={() => closeModal() }
-                >
-                  Close
-                </Button>
+                {modalAcceptText != '' &&
+                  <Button
+                    onClick={finalizeAction}
+                    variant="outlined"
+                    color="success"
+                    sx={{ ml: 2 }}
+                  >
+                    {modalAcceptText}
+                  </Button>
+                }
               </Grid>
             </Modal2>
           </Content>

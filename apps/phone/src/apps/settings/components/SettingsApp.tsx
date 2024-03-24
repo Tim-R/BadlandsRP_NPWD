@@ -317,6 +317,16 @@ export const SettingsApp: React.FC = () => {
               theme={theme}
             />
           </SettingsCategory>
+          <SettingsCategory title={t('APPS_ADVERTISEMENTS')}>
+            <SettingSwitch
+              label={'Notification'}
+              secondary={'Show notification for new advertisements'}
+              value={settings.ADVERTISEMENTS_notifyNewAdvertisement}
+              icon={<ListFilter />}
+              onClick={(curr) => handleSettingChange('ADVERTISEMENTS_notifyNewAdvertisement', !curr)}
+              theme={theme}
+            />
+          </SettingsCategory>
           <SettingsCategory title={t('SETTINGS.CATEGORY.ACTIONS')}>
             <SettingItem
               label={t('SETTINGS.OPTIONS.RESET_SETTINGS')}

@@ -1,8 +1,8 @@
 {
   "PhoneAsItem": {
-    "enabled": false,
-    "exportResource": "my-core-resource",
-    "exportFunction": "myCheckerFunction"
+    "enabled": true,
+    "exportResource": "blrp_core",
+    "exportFunction": "npwdHasPhone"
   },
   "customPhoneNumber": {
     "enabled": false,
@@ -10,25 +10,25 @@
     "exportFunction": "generateNumber"
   },
   "general": {
-    "useResourceIntegration": false,
-    "toggleKey": "f1",
+    "useResourceIntegration": true,
+    "toggleKey": "delete",
     "toggleCommand": "phone",
     "defaultLanguage": "en",
     "showId": false,
-    "phoneNumberFormat": "/(\\d{3})(\\d{3})(\\d{4})/"
+    "phoneNumberFormat": "/(\\d{3})(\\d{4})/"
   },
   "contacts": {
-    "frameworkPay": false,
-    "payResource": "my-core-resource",
-    "payFunction": "myCheckerFunction"
+    "frameworkPay": true,
+    "payResource": "blrp_core",
+    "payFunction": "npwdSendMoney"
   },
   "database": {
     "useIdentifierPrefix": false,
-    "playerTable": "users",
-    "identifierColumn": "identifier",
+    "playerTable": "characters",
+    "identifierColumn": "id",
     "identifierType": "license",
     "profileQueries": true,
-    "phoneNumberColumn": "phone_number"
+    "phoneNumberColumn": "phone"
   },
   "images": {
     "url": "https://api.fivemanage.com/api/image",
@@ -97,12 +97,169 @@
     "sentryEnabled": true
   },
   "defaultContacts": [],
-  "disabledApps": [],
-  "apps": [],
+  "disabledApps": [
+    "BROWSER",
+    "MATCH",
+    "DARKCHAT"
+  ],
+  "apps": [
+    "npwd_banking",
+    "npwd_badeats"
+  ],
+  "appSort": [
+    "DIALER",
+    "SERVICES"
+  ],
   "voiceMessage": {
-    "enabled": false,
+    "enabled": true,
     "authorizationHeader": "Authorization",
-    "url": "https://api.fivemanage/api/audio",
+    "url": "https://api.fivemanage.com/api/audio",
     "returnedDataIndexes": ["url"]
+  },
+  "advertisements": {
+    "priceInitial": 1000,
+    "priceBump": 1250,
+    "hideAfter": 60,
+    "bumpFor": 75,
+    "maxLength": 200
+  },
+  "services": {
+    "items": [
+      {
+        "action": "message",
+        "id": "Police",
+        "icon": "👮",
+        "name": "Police Emergency",
+        "subtitle": "Send Message"
+      },
+      {
+        "action": "message",
+        "id": "Police",
+        "anonymous": true,
+        "icon": "👮",
+        "name": "Police Emergency",
+        "subtitle": "Send Message (Anonymous)"
+      },
+      {
+        "action": "message",
+        "id": "PoliceNE",
+        "icon": "👮",
+        "name": "Police Non-Emergency",
+        "subtitle": "Send Message"
+      },
+      {
+        "action": "message",
+        "id": "PoliceNE",
+        "anonymous": true,
+        "icon": "👮",
+        "name": "Police Non-Emergency",
+        "subtitle": "Send Message (Anonymous)"
+      },
+      {
+        "action": "call",
+        "id": "911",
+        "icon": "👮",
+        "name": "Call Vinewood PD"
+      },
+      {
+        "action": "call",
+        "id": "912",
+        "icon": "👮",
+        "name": "Call Sandy Shores SO"
+      },
+      {
+        "action": "message",
+        "id": "EMS/Fire",
+        "icon": "🏥",
+        "name": "EMS / LSFD",
+        "subtitle": "Send Message"
+      },
+      {
+        "action": "message",
+        "id": "Taxi",
+        "icon": "🚕",
+        "name": "Taxi",
+        "subtitle": "Send Message"
+      },
+      {
+        "action": "message",
+        "id": "Taxi",
+        "anonymous": true,
+        "icon": "🚕",
+        "name": "Taxi",
+        "subtitle": "Send Message (Anonymous)"
+      },
+      {
+        "action": "message",
+        "id": "Tow Truck",
+        "icon": "🛻",
+        "name": "Tow Truck",
+        "subtitle": "Send Message"
+      },
+      {
+        "action": "message",
+        "id": "Lawyer",
+        "icon": "✒️",
+        "name": "Legal Services",
+        "subtitle": "Send Message"
+      },
+      {
+        "action": "message",
+        "id": "DOJ",
+        "icon": "⚖️",
+        "name": "Department of Justice",
+        "subtitle": "Send Message"
+      },
+      {
+        "action": "message",
+        "id": "DOC",
+        "icon": "⛓️",
+        "name": "Department of Corrections",
+        "subtitle": "Send Message"
+      },
+      {
+        "action": "message",
+        "id": "Weazel News",
+        "icon": "📰",
+        "name": "Weazel News",
+        "subtitle": "Send News Tip"
+      },
+      {
+        "action": "message",
+        "id": "Weazel News",
+        "icon": "📰",
+        "name": "Weazel News",
+        "subtitle": "Send News Tip (Anonymous)"
+      }
+    ],
+    "factionActions": [
+      {
+        "id": "leo-alert",
+        "groups": [
+          "FIB",
+          "LSPD",
+          "SAHP",
+          "Sheriff"
+        ],
+        "icon": "⚠️",
+        "name": "LEO Clear Area Warning",
+        "subtitle": "Send Quick Alert",
+        "message": "Police order all individuals to cease fire immediately and put your hands in the air. Failure to comply will result in lethal force",
+        "range": "around",
+        "urgency": "emergency"
+      },
+      {
+        "id": "leo-alert",
+        "groups": [
+          "FIB",
+          "LSPD",
+          "SAHP",
+          "Sheriff"
+        ],
+        "icon": "⚠️",
+        "name": "LEO Alert",
+        "subtitle": "Compose Alert"
+      }
+    ]
   }
 }

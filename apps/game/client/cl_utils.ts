@@ -1,3 +1,4 @@
+import { CommonEvents, Location, Vector } from '@typings/common';
 import { uuidv4 } from '../utils/fivem';
 import { ClUtils } from './client';
 
@@ -131,3 +132,35 @@ export const verifyExportArgType = (
       )}. Passed: ${passedArg}, Type: ${passedArgType})`,
     );
 };
+
+RegisterNuiCB(CommonEvents.SET_GPS, async (coords: Vector, cb) => {
+  SetNewWaypoint(coords.x, coords.y);
+  cb();
+})
+
+const getCoords = () => {
+  const c = GetEntityCoords(PlayerPedId(), true);
+
+  const v: Vector = { x: Number(c[0].toFixed(3)), y: Number(c[1].toFixed(3)), z: Number(c[2].toFixed(3)) }
+
+  return v;
+}
+
+RegisterNuiCB<Vector>(CommonEvents.GET_COORDS, async (_data, cb) => {
+  const c = getCoords();
+
+  cb({ c });
+})
+
+RegisterNuiCB<Location>(CommonEvents.GET_LOCATION, async (_data, cb) => {
+  const c = getCoords();
+  const z = GetNameOfZone(c.x, c.y, c.z);
+
+  const l: Location = {
+    zone: z,
+    coords: c
+  }
+
+  cb(l);
+})
+

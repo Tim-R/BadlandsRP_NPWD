@@ -54,6 +54,7 @@ const settingsSchema: Schema = {
     TWITTER_notiSoundVol: { type: 'number', required: true },
     TWITTER_notifyNewFeedTweet: { type: 'boolean', required: true },
     MARKETPLACE_notifyNewListing: { type: 'boolean', required: true },
+    ADVERTISEMENTS_notifyNewAdvertisement: { type: 'boolean', required: true },
   },
 };
 

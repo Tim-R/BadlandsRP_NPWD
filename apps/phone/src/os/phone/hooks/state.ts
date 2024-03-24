@@ -2,6 +2,29 @@ import { atom } from 'recoil';
 import { ResourceConfig } from '@typings/config';
 import { PhonePlayerData } from '@typings/phone';
 
+export const MockPlayerData: PhonePlayerData = {
+  id: 0,
+  groups: [],
+  permissions: [],
+  aptitudes: [],
+  businesses: [
+    {
+      name: 'A Business',
+      id: 1,
+      permissions: [
+        'manage'
+      ]
+    },
+    {
+      name: 'B Business',
+      id: 2,
+      permissions: [
+        'fire'
+      ]
+    },
+  ]
+}
+
 export const phoneState = {
   visibility: atom<boolean>({
     key: 'phoneVisibility',
@@ -17,7 +40,7 @@ export const phoneState = {
   }),
   playerData: atom<PhonePlayerData>({
     key: 'playerData',
-    default: null,
+    default: MockPlayerData,
   }),
   isPhoneDisabled: atom<boolean>({
     key: 'isPhoneDisabled',

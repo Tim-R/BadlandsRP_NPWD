@@ -53,10 +53,17 @@ export interface PhonePlayerData {
   id: number,
   groups: string[],
   permissions: string[],
-  aptitudes: Aptitude[]
+  aptitudes: Aptitude[],
+  businesses: Business[],
 }
 
 export interface Aptitude {
   id: string,
   level: number
+}
+
+export interface Business {
+  name: string,
+  id: number,
+  permissions: string[],
 }

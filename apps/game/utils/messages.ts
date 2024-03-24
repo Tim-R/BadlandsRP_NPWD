@@ -10,6 +10,10 @@ export function sendMessage(app: string, method: string, data: any): void {
   });
 }
 
+export function sendAdvertisementsMessage(method: string, data: any = {}): void {
+  return sendMessage(apps.ADVERTISEMENTS, method, data);
+}
+
 export function sendTwitterMessage(method: string, data: any = {}): void {
   return sendMessage(apps.TWITTER, method, data);
 }

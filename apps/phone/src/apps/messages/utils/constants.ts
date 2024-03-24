@@ -1,21 +1,5 @@
 import { Message, MessageConversation } from '@typings/messages';
 import { ServerPromiseResp } from '@typings/common';
-import { Advertisement } from '@typings/advertisements';
-
-export const MockAdvertisements: Advertisement[] = [
-  {
-    id: 1,
-    characterId: 9102,
-    body: 'Auto shop now open!',
-    updatedAt: 16234242422,
-  },
-  {
-    id: 2,
-    characterId: 12080,
-    body: 'Cowboy hats for sale!',
-    updatedAt: 16234242422,
-  },
-];
 
 export const MockMessageConversations: MessageConversation[] = [
   {
