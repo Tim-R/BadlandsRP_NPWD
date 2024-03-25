@@ -143,7 +143,10 @@ class _AdvertisementsService {
       const characterId = PlayerService.getCharacterId(reqObj.source);
       const characterName = PlayerService.getCharacterName(reqObj.source);
 
-      if(scanInputForBadWords(reqObj.source, 'PHONE-ADVERTISEMENTS', reqObj.data.body)) {
+      let badWords = await scanInputForBadWords(reqObj.source, 'PHONE-ADVERTISEMENTS', reqObj.data.body);
+
+      if(badWords) {
+        resp({ status: 'error', errorMsg: 'Bad word filter failed' });
         return;
       }
 

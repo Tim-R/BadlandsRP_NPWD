@@ -102,6 +102,14 @@ export const Advertisements: React.FC = () => {
 
   const closeModal = () => {
     setModalOpen(false);
+    setModalText('');
+    setModalAcceptText('');
+    setModalAction('');
+    setModalAdvertisement(null);
+    setModalBodyText('');
+    setModalPhoneChecked(false);
+    setModalLocationChecked(false);
+    setModalBusiness('');
   }
 
   const [bodyCharsRemaining, setBodyCharsRemaining] = useState(0);
