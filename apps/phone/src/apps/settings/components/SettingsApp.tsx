@@ -1,6 +1,5 @@
 import React from 'react';
 import { AppWrapper } from '@ui/components';
-import { AppTitle } from '@ui/components/AppTitle';
 import { AppContent } from '@ui/components/AppContent';
 import { useContextMenu, MapSettingItem, SettingOption } from '@ui/hooks/useContextMenu';
 import { usePhoneConfig } from '../../../config/hooks/usePhoneConfig';
@@ -14,7 +13,6 @@ import {
 } from './SettingItem';
 import { useTranslation } from 'react-i18next';
 
-import { FileCopy } from '@mui/icons-material';
 import {
   BookA,
   EyeOff,
@@ -34,7 +32,6 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 import { useTheme } from '@mui/material';
 import { useResetSettings, useSettings } from '../hooks/useSettings';
-import { setClipboard } from '@os/phone/hooks/useClipboard';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { IContextMenuOption } from '@ui/components/ContextMenu';
 import WallpaperModal from './WallpaperModal';
@@ -70,6 +67,8 @@ export const SettingsApp: React.FC = () => {
   const resetSettings = useResetSettings();
 
   const handleSettingChange = (key: string | number, value: unknown) => {
+    console.log('handleSettingChange', key, value)
+
     setSettings({ ...settings, [key]: value });
 
     if (key === 'theme') {

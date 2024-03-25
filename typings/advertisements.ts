@@ -22,6 +22,7 @@ export interface AdvertisementsConfig {
   priceBump: number,
   hideAfter: number,
   bumpFor: number,
+  minLength: number,
   maxLength: number,
 }
 
@@ -32,6 +33,7 @@ export interface AdvertisementProps {
 
 export enum AdvertisementsEvents {
   FETCH_ADVERTISEMENTS = 'npwd:fetchAdvertisements',
+  FETCH_MY_ADVERTISEMENTS = 'npwd:fetchMyAdvertisements',
 
   BUMP_AD = 'npwd:bumpAd',
   BUMP_AD_BROADCAST = 'npwd:bumpAdBroadcast',

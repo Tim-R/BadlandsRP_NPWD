@@ -14,6 +14,16 @@ onNetPromise<void, Advertisement[]>(
   },
 );
 
+onNetPromise<void, Advertisement[]>(
+  AdvertisementsEvents.FETCH_MY_ADVERTISEMENTS,
+  async (reqObj, resp) => {
+    AdvertisementsService.handleFetchMyAdvertisements(reqObj, resp).catch((e) => {
+      mainLogger.error(`Error occurred in fetch my advertisements (${reqObj.source}), Error: ${e.message}`);
+      resp({ status: 'error', errorMsg: 'INTERNAL_ERROR' });
+    });
+  },
+);
+
 onNetPromise<{ adId: number }, Advertisement[]>(
   AdvertisementsEvents.BUMP_AD,
   async (reqObj, resp) => {

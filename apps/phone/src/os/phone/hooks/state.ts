@@ -40,7 +40,7 @@ export const phoneState = {
   }),
   playerData: atom<PhonePlayerData>({
     key: 'playerData',
-    default: MockPlayerData,
+    default: null,
   }),
   isPhoneDisabled: atom<boolean>({
     key: 'isPhoneDisabled',

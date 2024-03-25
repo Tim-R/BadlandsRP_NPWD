@@ -4,13 +4,14 @@ import { sendAdvertisementsMessage } from "../utils/messages";
 import { Location } from "@typings/common";
 
 RegisterNuiProxy(AdvertisementsEvents.FETCH_ADVERTISEMENTS);
+RegisterNuiProxy(AdvertisementsEvents.FETCH_MY_ADVERTISEMENTS);
 RegisterNuiProxy(AdvertisementsEvents.BUMP_AD);
 RegisterNuiProxy(AdvertisementsEvents.DELETE_AD);
 RegisterNuiProxy(AdvertisementsEvents.EDIT_AD);
 RegisterNuiProxy(AdvertisementsEvents.CREATE_AD);
 
-onNet(AdvertisementsEvents.BUMP_AD_BROADCAST, (adId: number) => {
-  sendAdvertisementsMessage(AdvertisementsEvents.BUMP_AD_BROADCAST, adId);
+onNet(AdvertisementsEvents.BUMP_AD_BROADCAST, (advertisement: Advertisement) => {
+  sendAdvertisementsMessage(AdvertisementsEvents.BUMP_AD_BROADCAST, advertisement);
 });
 
 onNet(AdvertisementsEvents.DELETE_AD_BROADCAST, (adId: number) => {

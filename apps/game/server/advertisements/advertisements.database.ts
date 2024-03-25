@@ -11,6 +11,35 @@ export class _AdvertisementsDB {
     this.config = getConfig();
   }
 
+  prepareGroups(groups: string[]): string {
+    return groups.map(group => {
+      return `"${group}"`;
+    }).join(',');
+  }
+
+  async fetchAdvertisement(adId: number): Promise<Advertisement> {
+    const query = `
+        SELECT npwd_advertisements.id,
+               npwd_advertisements.character_id               as characterId,
+               npwd_advertisements.character_name             as characterName,
+               npwd_advertisements.business,
+               npwd_advertisements.body,
+               npwd_advertisements.phone,
+               npwd_advertisements.location,
+               UNIX_TIMESTAMP(npwd_advertisements.bumped_at)  as bumpedAt
+        FROM npwd_advertisements
+        WHERE npwd_advertisements.id = ?
+    `;
+
+    const result = (await DbInterface.fetch<Advertisement[]>(query, [adId])).map(a => deserializeAdvertisement(a));
+
+    if(!result || result.length == 0) {
+      return null;
+    }
+
+    return result[0];
+  }
+
   async getAdvertisements(): Promise<Advertisement[]> {
     const hideAfter = this.config.advertisements.hideAfter;
 
@@ -26,7 +55,7 @@ export class _AdvertisementsDB {
         FROM npwd_advertisements
         WHERE
           npwd_advertisements.deleted_at IS NULL AND
-          npwd_advertisements.updated_at >= DATE_SUB(NOW(), INTERVAL ${hideAfter} MINUTE)
+          npwd_advertisements.bumped_at >= DATE_SUB(NOW(), INTERVAL ${hideAfter} MINUTE)
     `;
 
     const results = (await DbInterface.fetch<Advertisement[]>(query)).map(a => deserializeAdvertisement(a));
@@ -34,10 +63,34 @@ export class _AdvertisementsDB {
     return results;
   }
 
-  async bumpAd(identifier: string, groups: string[], adId: number): Promise<number> {
-    const groupsDb = groups.map(group => {
-      return `"${group}"`;
-    }).join(',');
+  async getMyAdvertisements(identifier: string, groups: string[]): Promise<Advertisement[]> {
+    const groupsDb = this.prepareGroups(groups);
+
+    const query = `
+      SELECT npwd_advertisements.id,
+            npwd_advertisements.character_id               as characterId,
+            npwd_advertisements.character_name             as characterName,
+            npwd_advertisements.business,
+            npwd_advertisements.body,
+            npwd_advertisements.phone,
+            npwd_advertisements.location,
+            UNIX_TIMESTAMP(npwd_advertisements.bumped_at)  as bumpedAt
+      FROM npwd_advertisements
+      WHERE
+        (
+          npwd_advertisements.character_id = ? OR
+          npwd_advertisements.business IN (${groupsDb})
+        ) AND
+        npwd_advertisements.deleted_at IS NULL
+    `;
+
+    const results = (await DbInterface.fetch<Advertisement[]>(query, [identifier])).map(a => deserializeAdvertisement(a));
+
+    return results;
+  }
+
+  async bumpAd(identifier: string, groups: string[], adId: number): Promise<Advertisement> {
+    const groupsDb = this.prepareGroups(groups);
 
     const query = `
         UPDATE npwd_advertisements
@@ -52,13 +105,17 @@ export class _AdvertisementsDB {
         ) AND id = ?
     `;
 
-    return await DbInterface.exec(query, [identifier, adId]);
+    let result = await DbInterface.exec(query, [identifier, adId]);
+
+    if(!result || result == 0) {
+      return null;
+    }
+
+    return this.fetchAdvertisement(adId);
   }
 
   async deleteAd(identifier: string, groups: string[], adId: number): Promise<number> {
-    const groupsDb = groups.map(group => {
-      return `"${group}"`;
-    }).join(',');
+    const groupsDb = this.prepareGroups(groups);
 
     const query = `
         UPDATE npwd_advertisements SET deleted_at = NOW()
@@ -79,9 +136,7 @@ export class _AdvertisementsDB {
     groups: string[],
     data: { adId: number, business?: string, body: string, phone?: string, location?: Location }
   ): Promise<number> {
-    const groupsDb = groups.map(group => {
-      return `"${group}"`;
-    }).join(',');
+    const groupsDb = this.prepareGroups(groups);
 
     const query = `
         UPDATE npwd_advertisements

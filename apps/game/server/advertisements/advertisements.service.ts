@@ -31,6 +31,21 @@ class _AdvertisementsService {
     }
   }
 
+  async handleFetchMyAdvertisements(
+    reqObj: PromiseRequest<void>,
+    resp: PromiseEventResp<Advertisement[]>,
+  ) {
+    try {
+      const identifier = PlayerService.getIdentifier(reqObj.source);
+      const groups = PlayerService.getGroups(reqObj.source);
+      const myAdvertisements = await this.advertisementsDB.getMyAdvertisements(identifier, groups);
+
+      resp({ status: 'ok', data: myAdvertisements });
+    } catch(err) {
+      resp({ status: 'error', errorMsg: err.message });
+    }
+  }
+
   async handleBumpAd(
     reqObj: PromiseRequest<{ adId: number }>,
     resp: PromiseEventResp<void>,
@@ -46,9 +61,9 @@ class _AdvertisementsService {
         return;
       }
 
-      let rowsAffected = await this.advertisementsDB.bumpAd(identifier, groups, reqObj.data.adId);
+      let bumpedAdvertisement = await this.advertisementsDB.bumpAd(identifier, groups, reqObj.data.adId);
 
-      if(rowsAffected == 0) {
+      if(!bumpedAdvertisement) {
         resp({ status: 'error', errorMsg: 'Unable to bump advertisement' });
         return;
       }
@@ -58,7 +73,7 @@ class _AdvertisementsService {
       });
 
       resp({ status: 'ok' });
-      emitNet(AdvertisementsEvents.BUMP_AD_BROADCAST, -1, reqObj.data.adId);
+      emitNet(AdvertisementsEvents.BUMP_AD_BROADCAST, -1, bumpedAdvertisement);
     } catch(e) {
       resp({ status: 'error', errorMsg: e.message });
     }
@@ -104,7 +119,20 @@ class _AdvertisementsService {
       const identifier = PlayerService.getIdentifier(reqObj.source);
       const groups = PlayerService.getGroups(reqObj.source);
 
-      if(scanInputForBadWords(reqObj.source, 'PHONE-ADVERTISEMENTS', reqObj.data.body)) {
+      let badWords = await scanInputForBadWords(reqObj.source, 'PHONE-ADVERTISEMENTS', reqObj.data.body);
+
+      if(badWords) {
+        resp({ status: 'error', errorMsg: 'Bad word filter failed' });
+        return;
+      }
+
+      if(reqObj.data.body.length < this.config.advertisements.minLength) {
+        resp({ status: 'error', errorMsg: 'Advertisement is too short' });
+        return;
+      }
+
+      if(reqObj.data.body.length > this.config.advertisements.maxLength) {
+        resp({ status: 'error', errorMsg: 'Advertisement is too long' });
         return;
       }
 
@@ -154,6 +182,16 @@ class _AdvertisementsService {
 
       if(!paid) {
         resp({ status: 'error', errorMsg: 'Insufficient funds' });
+        return;
+      }
+
+      if(reqObj.data.body.length < this.config.advertisements.minLength) {
+        resp({ status: 'error', errorMsg: 'Advertisement is too short' });
+        return;
+      }
+
+      if(reqObj.data.body.length > this.config.advertisements.maxLength) {
+        resp({ status: 'error', errorMsg: 'Advertisement is too long' });
         return;
       }
 

@@ -5,7 +5,7 @@ import fetchNui from '@utils/fetchNui';
 import styled from '@emotion/styled';
 import { phoneState } from '@os/phone/hooks/state';
 import { Modal2 } from '@ui/components';
-import { useAdvertisementsValue, useModalAcceptTextValue, useModalAction, useModalOpenValue, useModalTextValue, useSetModalAcceptText, useSetModalAction, useSetModalOpen, useSetModalText } from '../hooks/state';
+import { useAdvertisementsValue, useModalAcceptTextValue, useModalAction, useModalOpenValue, useModalTextValue, useMyAdvertisementsValue, usePageValue, useSetModalAcceptText, useSetModalAction, useSetModalOpen, useSetModalText } from '../hooks/state';
 import { AdvertisementItem } from './AdvertisementItem';
 import { Advertisement } from '@typings/advertisements';
 import { CommonEvents, ServerPromiseResp, Vector } from '@typings/common';
@@ -44,7 +44,6 @@ const Content = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   padding: 1.5rem;
-  max-height: calc(100% - 3.5rem - 4rem);
   overflow: auto;
 `;
 
@@ -52,7 +51,11 @@ export const Advertisements: React.FC = () => {
   const config = useRecoilValue(phoneState.resourceConfig);
   const playerData = usePlayerData();
   const advertisements = useAdvertisementsValue();
+  const myAdvertisements = useMyAdvertisementsValue();
   const { addAlert } = useSnackbar();
+
+  /* Router components */
+  const page = usePageValue();
 
   /* Utils */
   const getLocation = async () => {
@@ -245,7 +248,7 @@ export const Advertisements: React.FC = () => {
           }
 
           return addAlert({
-            message: 'Advertisement edited',
+            message: 'Advertisement created',
             type: 'success',
           });
         });
@@ -260,18 +263,40 @@ export const Advertisements: React.FC = () => {
   return (
       <AdvertisementsThemeProvider>
         <Container square elevation={0}>
-          <Content className="h-full">
-            {advertisements.length == 0 &&
+          <Content>
+            {(page == '/advertisements' && advertisements.length == 0) &&
               <div className="flex flex-col grow items-center justify-center">
                 <Typography variant="h6">No recent advertisements</Typography>
               </div>
             }
 
-            {advertisements.length > 0 &&
+            {(page == '/advertisements' && advertisements.length > 0) &&
               <div className="flex flex-col">
                 {[...advertisements]
                   .sort((a, b) => {
                     return b.bumpedAt - a.bumpedAt;
+                  })
+                  .map((advertisement) => {
+                    return <AdvertisementItem advertisement={advertisement} actionHandler={handleAdvertisementAction} />
+                  })
+                }
+              </div>
+            }
+
+            {(page == '/advertisements/mine' && myAdvertisements.length == 0) &&
+              <div className="flex flex-col grow items-center justify-center">
+                <Typography variant="h6">You have no advertisements</Typography>
+              </div>
+            }
+
+            {(page == '/advertisements/mine' && myAdvertisements.length > 0) &&
+              <div className="flex flex-col">
+                {[...myAdvertisements]
+                  .sort((a, b) => {
+                    return b.bumpedAt - a.bumpedAt;
+                  })
+                  .filter((a) => {
+                    return playerData.id == a.characterId || playerData.businesses.some((b) => b.name == a.business);
                   })
                   .map((advertisement) => {
                     return <AdvertisementItem advertisement={advertisement} actionHandler={handleAdvertisementAction} />
