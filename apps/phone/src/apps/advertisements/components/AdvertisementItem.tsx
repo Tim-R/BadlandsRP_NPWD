@@ -10,6 +10,7 @@ import { CommonEvents } from '@typings/common';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { useConfig } from '@os/phone/hooks';
 import { useIsModeratorOrGreater, useIsSupportStaffOrGreater } from '@os/phone/hooks/usePlayerPermissions';
+import { cn } from '@utils/css';
 
 export const AdvertisementItem: React.FC<AdvertisementProps> = ({ advertisement, actionHandler }) => {
   const playerData = usePlayerData();
@@ -96,7 +97,12 @@ export const AdvertisementItem: React.FC<AdvertisementProps> = ({ advertisement,
         <div>
           <button
             onClick={handleClick}
-            className="rounded-full bg-green-100 p-3 text-green-500 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-neutral-700"
+            className={cn(
+              'rounded-full p-3',
+              canManage ?
+                'bg-green-100 text-green-500 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-neutral-700' :
+                'bg-blue-100 text-blue-500 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-neutral-700'
+            )}
           >
             <MenuIcon size={20} />
           </button>

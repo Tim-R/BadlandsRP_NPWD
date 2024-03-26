@@ -9,6 +9,7 @@ export const MockAdvertisements: Advertisement[] = [
     characterName: 'John Doe',
     body: 'Auto shop now open! This ad is really long to test the UI appearance in the development environment. Without this, we may never know how a long long ad would look in production!',
     bumpedAt: 1711387343,
+    phone: '123-4567',
   },
   {
     id: 2,
