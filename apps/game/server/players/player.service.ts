@@ -284,6 +284,23 @@ class _PlayerService {
   getCharacterName(source: number): string {
     return this.character(source).get('fullname');
   }
+
+  /* Helpers for staff groups on admin mode setting */
+  isSupportStaffOrGreater(source: number): boolean {
+    return this.character(source).hasGroup(['staff', 'moderator', 'admin', 'superadmin']);
+  }
+
+  isModeratorOrGreater(source: number): boolean {
+    return this.character(source).hasGroup(['moderator', 'admin', 'superadmin']);
+  }
+
+  isAdminOrGreater(source: number): boolean {
+    return this.character(source).hasGroup(['admin', 'superadmin']);
+  }
+
+  isSuperadminOrGreater(source: number): boolean {
+    return this.character(source).hasGroup(['superadmin']);
+  }
 }
 
 const PlayerService = new _PlayerService();

@@ -277,7 +277,7 @@ export const Advertisements: React.FC = () => {
                     return b.bumpedAt - a.bumpedAt;
                   })
                   .map((advertisement) => {
-                    return <AdvertisementItem advertisement={advertisement} actionHandler={handleAdvertisementAction} />
+                    return <AdvertisementItem key={advertisement.id} advertisement={advertisement} actionHandler={handleAdvertisementAction} />
                   })
                 }
               </div>
@@ -299,7 +299,7 @@ export const Advertisements: React.FC = () => {
                     return playerData.id == a.characterId || playerData.businesses.some((b) => b.name == a.business);
                   })
                   .map((advertisement) => {
-                    return <AdvertisementItem advertisement={advertisement} actionHandler={handleAdvertisementAction} />
+                    return <AdvertisementItem key={advertisement.id} advertisement={advertisement} actionHandler={handleAdvertisementAction} />
                   })
                 }
               </div>

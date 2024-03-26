@@ -121,6 +121,7 @@ interface SettingSwitchProps {
   icon: JSX.Element;
   secondary: string;
   theme: any;
+  style?: any;
 }
 
 export const SettingSwitch: React.FC<SettingSwitchProps> = ({
@@ -129,6 +130,7 @@ export const SettingSwitch: React.FC<SettingSwitchProps> = ({
   onClick,
   icon,
   secondary,
+  style,
 }) => (
   <NPWDListItem
     startElement={icon}
@@ -139,6 +141,7 @@ export const SettingSwitch: React.FC<SettingSwitchProps> = ({
         <SwitchThumb />
       </SwitchRoot>
     }
+    style={style}
   />
 );
 

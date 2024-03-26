@@ -1,7 +1,7 @@
 import usePlayerData from '@os/phone/hooks/usePlayerData';
 import { AdvertisementProps } from '@typings/advertisements';
 import { Menu, MenuItem } from '@mui/material';
-import { Phone, MapPin, ArrowBigUp, Edit, Trash2, Menu as MenuIcon, EyeOff } from 'lucide-react';
+import { Phone, MapPin, ArrowBigUp, Edit, Trash2, Menu as MenuIcon, Info } from 'lucide-react';
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import fetchNui from '@utils/fetchNui';
@@ -9,6 +9,7 @@ import { CallEvents } from '@typings/call';
 import { CommonEvents } from '@typings/common';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { useConfig } from '@os/phone/hooks';
+import { useIsModeratorOrGreater, useIsSupportStaffOrGreater } from '@os/phone/hooks/usePlayerPermissions';
 
 export const AdvertisementItem: React.FC<AdvertisementProps> = ({ advertisement, actionHandler }) => {
   const playerData = usePlayerData();
@@ -72,6 +73,9 @@ export const AdvertisementItem: React.FC<AdvertisementProps> = ({ advertisement,
     actionHandler(advertisement, 'delete');
   }
 
+  const isSupportStaff = useIsSupportStaffOrGreater();
+  const isModerator = useIsModeratorOrGreater();
+
   return (
     <div className="min-w-0 flex-1 flex items-center justify-between focus:outline-none rounded-xl my-2 dark:ring-1 dark:ring-gray-900/5 bg-neutral-200 dark:bg-neutral-900 px-3 py-3">
       <div className="shrink" style={{maxWidth: '85%'}}>
@@ -88,7 +92,7 @@ export const AdvertisementItem: React.FC<AdvertisementProps> = ({ advertisement,
         }
       </div>
       <div className="space-x-3 shrink-0">
-        { (advertisement.phone || advertisement.location || canManage) &&
+        { (advertisement.phone || advertisement.location || canManage || isSupportStaff) &&
         <div>
           <button
             onClick={handleClick}
@@ -125,8 +129,12 @@ export const AdvertisementItem: React.FC<AdvertisementProps> = ({ advertisement,
               <MenuItem onClick={handleEdit}><Edit size={20} className="pr-1" /> Edit</MenuItem>
             }
 
-            { canManage &&
-              <MenuItem onClick={handleDelete}><Trash2 size={20} className="pr-1" /> Delete</MenuItem>
+            { (canManage || isModerator) &&
+              <MenuItem onClick={handleDelete} style={{color: 'orange'}}><Trash2 size={20} className="pr-1" /> Delete</MenuItem>
+            }
+
+            { isSupportStaff &&
+              <MenuItem onClick={handleClose} style={{color: 'orange'}}><Info size={20} className="pr-1" /> Character ID: {advertisement.characterId}</MenuItem>
             }
           </Menu>
         </div>

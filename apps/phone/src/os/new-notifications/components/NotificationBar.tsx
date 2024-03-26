@@ -31,6 +31,8 @@ import { UnreadNotificationBarProps } from '@typings/notifications';
 import { useNotification } from '../useNotification';
 import {BatteryFull, SignalMedium} from "lucide-react";
 import {cn} from "@utils/css";
+import { AdminPanelSettings } from '@mui/icons-material';
+import { useIsSupportStaffOrGreater } from '@os/phone/hooks/usePlayerPermissions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -134,6 +136,8 @@ export const NotificationBar = () => {
     }
   }, [unreadNotificationIds, setBarUncollapsed]);
 
+  const adminMode = useIsSupportStaffOrGreater();
+
   return (
     <>
       <div
@@ -158,6 +162,11 @@ export const NotificationBar = () => {
           </Grid>
         )}
         <div className="flex items-center justify-end">
+          {adminMode &&
+            <div>
+              <AdminPanelSettings style={{color: 'orange'}} />
+            </div>
+          }
           <div>
             <SignalMedium />
           </div>

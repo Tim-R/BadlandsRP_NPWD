@@ -21,6 +21,7 @@ export type IPhoneLocalStorage = {
 };
 
 export interface IPhoneSettings {
+  adminMode: boolean,
   language: SettingOption;
   iconSet: SettingOption<IconSetObject>;
   wallpaper: SettingOption;

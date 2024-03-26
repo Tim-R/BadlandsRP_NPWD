@@ -26,7 +26,7 @@ export const MockAdvertisements: Advertisement[] = [
     business: 'A Cool Business',
   },
   {
-    id: 3,
+    id: 4,
     characterId: 0,
     characterName: 'Mike Jones',
     body: 'Auto shop now open! This ad is really long to test the UI appearance in the development environment. Without this, we may never know how a long long ad would look in production!',
@@ -34,7 +34,7 @@ export const MockAdvertisements: Advertisement[] = [
     business: 'A Cool Business',
   },
   {
-    id: 3,
+    id: 5,
     characterId: 0,
     characterName: 'Mike Jones',
     body: 'Auto shop now open! This ad is really long to test the UI appearance in the development environment. Without this, we may never know how a long long ad would look in production!',
@@ -42,7 +42,7 @@ export const MockAdvertisements: Advertisement[] = [
     business: 'A Cool Business',
   },
   {
-    id: 3,
+    id: 6,
     characterId: 0,
     characterName: 'Mike Jones',
     body: 'Auto shop now open! This ad is really long to test the UI appearance in the development environment. Without this, we may never know how a long long ad would look in production!',
@@ -50,7 +50,7 @@ export const MockAdvertisements: Advertisement[] = [
     business: 'A Cool Business',
   },
   {
-    id: 3,
+    id: 7,
     characterId: 0,
     characterName: 'Mike Jones',
     body: 'Auto shop now open! This ad is really long to test the UI appearance in the development environment. Without this, we may never know how a long long ad would look in production!',

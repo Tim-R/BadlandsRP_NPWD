@@ -14,6 +14,7 @@ export interface ListItemProps extends React.HTMLAttributes<HTMLLIElement> {
   endElement?: React.ReactNode;
   button?: boolean;
   selected?: boolean;
+  style?: any;
 }
 
 export const List: React.FC<ListProps> = ({ children }) => {
@@ -33,6 +34,7 @@ export const ListItem = ({
   selected = false,
   onClick,
   children,
+  style,
 }: ListItemProps) => {
   return (
     <li className="dark:bg-neutral-900" onClick={button ? onClick : undefined}>
@@ -43,6 +45,8 @@ export const ListItem = ({
           selected && 'bg-neutral-200 dark:bg-neutral-700',
           button && 'cursor-pointer',
         )}
+
+        style={style}
       >
         {children ? (
           <>{children}</>

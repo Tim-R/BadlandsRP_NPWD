@@ -4,7 +4,9 @@ import { PhonePlayerData } from '@typings/phone';
 
 export const MockPlayerData: PhonePlayerData = {
   id: 0,
-  groups: [],
+  groups: [
+    'staff',
+  ],
   permissions: [],
   aptitudes: [],
   businesses: [
@@ -40,7 +42,7 @@ export const phoneState = {
   }),
   playerData: atom<PhonePlayerData>({
     key: 'playerData',
-    default: null,
+    default: MockPlayerData,
   }),
   isPhoneDisabled: atom<boolean>({
     key: 'isPhoneDisabled',
@@ -57,5 +59,26 @@ export const phoneState = {
   extApps: atom({
     key: 'phoneExtApps',
     default: [],
+  }),
+
+  /* Staff permissions */
+  isSupportStaffOrGreater: atom({
+    key: 'isSupportStaffOrGreater',
+    default: false,
+  }),
+
+  isModeratorOrGreater: atom({
+    key: 'isModeratorOrGreater',
+    default: false,
+  }),
+
+  isAdminOrGreater: atom({
+    key: 'isAdminOrGreater',
+    default: false,
+  }),
+
+  isSuperadminOrGreater: atom({
+    key: 'isSuperadminOrGreater',
+    default: false,
   }),
 };

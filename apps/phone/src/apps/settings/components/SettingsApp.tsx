@@ -28,6 +28,7 @@ import {
   ListFilter,
   Eraser,
   Share,
+  ShieldCheck,
 } from 'lucide-react';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTheme } from '@mui/material';
@@ -41,6 +42,8 @@ import { useCustomWallpaperModal } from '../state/customWallpaper.state';
 import fetchNui from '@utils/fetchNui';
 import { SettingEvents } from '@typings/settings';
 import { ServerPromiseResp } from '@typings/common';
+import { setIsAdminOrGreater, setIsModeratorOrGreater, setIsSuperadminOrGreater, setIsSupportStaffOrGreater, usePlayerPermissions } from '@os/phone/hooks/usePlayerPermissions';
+import { AdminPanelSettings } from '@mui/icons-material';
 
 const useStyles = makeStyles({
   backgroundModal: {
@@ -62,13 +65,13 @@ export const SettingsApp: React.FC = () => {
   const [t] = useTranslation();
   const [customWallpaperState, setCustomWallpaperState] = useCustomWallpaperModal();
 
+  const { playerHasGroup } = usePlayerPermissions();
+
   const { addAlert } = useSnackbar();
 
   const resetSettings = useResetSettings();
 
   const handleSettingChange = (key: string | number, value: unknown) => {
-    console.log('handleSettingChange', key, value)
-
     setSettings({ ...settings, [key]: value });
 
     if (key === 'theme') {
@@ -156,6 +159,7 @@ export const SettingsApp: React.FC = () => {
   const [openMenu, closeMenu, ContextMenu, isMenuOpen] = useContextMenu();
   const classes = useStyles();
   const theme = useTheme();
+
   return (
     <AppWrapper>
       {/* Used for picking and viewing a custom wallpaper */}
@@ -179,6 +183,19 @@ export const SettingsApp: React.FC = () => {
         }}
       >
         <div className="py-4">
+          {playerHasGroup('staff') &&
+            <SettingsCategory title={'Staff Settings'}>
+              <SettingSwitch
+                label={'Admin Mode'}
+                secondary={'Enable server staff overrides where applicable'}
+                icon={<AdminPanelSettings />}
+                value={settings.adminMode}
+                onClick={(curr) => handleSettingChange('adminMode', !curr)}
+                theme={theme}
+                style={{border: '2px solid orange', borderRadius: '0.75rem'}}
+              />
+            </SettingsCategory>
+          }
           <SettingsCategory title={t('SETTINGS.CATEGORY.PHONE')}>
             <SettingItemIconAction
               label={t('SETTINGS.PHONE_NUMBER')}
