@@ -9,10 +9,12 @@ export const useAdvertisementsNotifications = () => {
   const setNotification = (advertisement: Advertisement) => {
     if (!ADVERTISEMENTS_notifyNewAdvertisement) return;
 
+    let posterName = advertisement.business ?? advertisement.characterName;
+
     enqueueNotification({
       appId: 'ADVERTISEMENTS',
       content: advertisement.body,
-      secondaryTitle: 'New Advertisement',
+      secondaryTitle: posterName,
       duration: 5000,
       keepOpen: false,
       path: '/advertisements',

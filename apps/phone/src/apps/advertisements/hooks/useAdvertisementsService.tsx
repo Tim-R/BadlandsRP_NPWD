@@ -6,11 +6,13 @@ import { useAdvertisementsActions } from "./useAdvertisementsActions";
 import { Location } from "@typings/common";
 import { useAdvertisementsNotifications } from "./useAdvertisementsNotifications";
 import { useSettingsValue } from "@apps/settings/hooks/useSettings";
+import usePlayerData from "@os/phone/hooks/usePlayerData";
 
 export const useAdvertisementsService = () => {
   const { bumpAdvertisement, deleteAdvertisement, editAdvertisement, createAdvertisement } = useAdvertisementsActions();
   const { setNotification } = useAdvertisementsNotifications();
   const { ADVERTISEMENTS_notifyNewAdvertisement } = useSettingsValue();
+  const playerData = usePlayerData();
 
   const handleBumpAdBroadcast = useCallback((advertisement: Advertisement) => {
     bumpAdvertisement(advertisement);
@@ -26,8 +28,11 @@ export const useAdvertisementsService = () => {
 
   const handleCreateAdBroadcast = useCallback((advertisement: Advertisement) => {
     createAdvertisement(advertisement);
-    setNotification(advertisement);
-  }, [createAdvertisement, ADVERTISEMENTS_notifyNewAdvertisement]);
+
+    if(advertisement.characterId !== playerData.id) {
+      setNotification(advertisement);
+    }
+  }, [createAdvertisement, ADVERTISEMENTS_notifyNewAdvertisement, playerData]);
 
   useNuiEvent(APP_ADVERTISEMENTS, AdvertisementsEvents.BUMP_AD_BROADCAST, handleBumpAdBroadcast);
   useNuiEvent(APP_ADVERTISEMENTS, AdvertisementsEvents.DELETE_AD_BROADCAST, handleDeleteAdBroadcast);
