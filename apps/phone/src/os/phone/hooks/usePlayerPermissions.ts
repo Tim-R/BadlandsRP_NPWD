@@ -19,7 +19,7 @@ export const usePlayerPermissions = () => {
     setModerator(computeIsModeratorOrGreater());
     setAdmin(computeIsAdminOrGreater());
     setSuperadmin(computeIsSuperadminOrGreater());
-  }, [playerData.groups, adminMode]);
+  }, [playerData, adminMode]);
 
   const playerHasGroup = useCallback((group: string) => {
     return playerData.groups.includes(group);

@@ -130,7 +130,7 @@ export const AdvertisementItem: React.FC<AdvertisementProps> = ({ advertisement,
             }
 
             { (canManage || isModerator) &&
-              <MenuItem onClick={handleDelete} style={{color: 'orange'}}><Trash2 size={20} className="pr-1" /> Delete</MenuItem>
+              <MenuItem onClick={handleDelete} style={{color: !canManage ? 'orange' : ''}}><Trash2 size={20} className="pr-1" /> Delete</MenuItem>
             }
 
             { isSupportStaff &&

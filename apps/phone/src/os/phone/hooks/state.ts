@@ -6,6 +6,7 @@ export const MockPlayerData: PhonePlayerData = {
   id: 0,
   groups: [
     'staff',
+    'moderator',
   ],
   permissions: [],
   aptitudes: [],
@@ -62,6 +63,11 @@ export const phoneState = {
   }),
 
   /* Staff permissions */
+  permissionsComputed: atom({
+    key: 'permissionsComputed',
+    default: false,
+  }),
+
   isSupportStaffOrGreater: atom({
     key: 'isSupportStaffOrGreater',
     default: false,

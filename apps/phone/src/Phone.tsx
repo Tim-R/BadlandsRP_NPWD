@@ -37,6 +37,7 @@ import { useNotificationListener } from '@os/new-notifications/useNotificationLi
 import { useSystemNotificationListener } from '@os/new-notifications/components/system/useSystemNotificationListener';
 import { useNotificationBarListener } from '@os/new-notifications/useNotificationBarListener';
 import { useAdvertisementsService } from '@apps/advertisements/hooks/useAdvertisementsService';
+import { usePlayerPermissions } from '@os/phone/hooks/usePlayerPermissions';
 
 interface PhoneProps {
   notiRefCB: Dispatch<SetStateAction<HTMLElement>>;
@@ -80,6 +81,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
   useDialService();
   useDarkchatService();
   useInvalidSettingsHandler();
+  usePlayerPermissions();
 
   const externalApps = useExternalApps();
 

@@ -114,10 +114,17 @@ export class _AdvertisementsDB {
     return this.fetchAdvertisement(adId);
   }
 
-  async deleteAd(identifier: string, groups: string[], adId: number): Promise<number> {
+  async deleteAd(identifier: string, groups: string[], adId: number, isModerator: boolean): Promise<number> {
     const groupsDb = this.prepareGroups(groups);
 
-    const query = `
+    if(isModerator) {
+      return await DbInterface.exec(`
+          UPDATE npwd_advertisements SET deleted_at = NOW()
+          WHERE id = ?
+      `, [adId]);
+    }
+
+    let query = `
         UPDATE npwd_advertisements SET deleted_at = NOW()
         WHERE (
           character_id = ? OR

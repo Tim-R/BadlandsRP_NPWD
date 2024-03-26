@@ -1,5 +1,4 @@
 import { AdvertisementsDB, _AdvertisementsDB } from "./advertisements.database";
-import { mainLogger } from '../sv_logger';
 import { PromiseEventResp, PromiseRequest } from "../lib/PromiseNetEvents/promise.types";
 import { Advertisement, AdvertisementsEvents } from "@typings/advertisements";
 import PlayerService from "../players/player.service";
@@ -86,15 +85,22 @@ class _AdvertisementsService {
     try {
       const identifier = PlayerService.getIdentifier(reqObj.source);
       const groups = PlayerService.getGroups(reqObj.source);
+      const isModerator = PlayerService.isModeratorOrGreater(reqObj.source);
 
-      let rowsAffected = await this.advertisementsDB.deleteAd(identifier, groups, reqObj.data.adId);
+      let rowsAffected = await this.advertisementsDB.deleteAd(identifier, groups, reqObj.data.adId, isModerator);
 
       if(rowsAffected == 0) {
         resp({ status: 'error', errorMsg: 'Unable to delete advertisement' });
         return;
       }
 
-      PlayerService.log(reqObj.source, 'ACTION', `Deleted advertisement`, {
+      let logContext = 'ACTION';
+
+      if(isModerator) {
+        logContext = 'ADMIN';
+      }
+
+      PlayerService.log(reqObj.source, logContext, `Deleted advertisement`, {
         id: reqObj.data.adId
       });
 
