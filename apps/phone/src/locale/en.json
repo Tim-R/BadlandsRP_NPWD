@@ -333,6 +333,7 @@
     "APPS_CAMERA": "Camera",
     "APPS_SERVICES": "State Services",
     "APPS_ADVERTISEMENTS": "Advertisements",
+    "APPS_BLEETER": "Bleeter",
     "APPS_MATCH": "Matchmaker",
     "APPS_CALCULATOR_COPIED": "Result was copied to clipboard!",
     "APPS_DARKCHAT": "IRC",

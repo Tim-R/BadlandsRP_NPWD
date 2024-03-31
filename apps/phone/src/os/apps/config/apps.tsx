@@ -44,6 +44,7 @@ import {
 } from '@apps/darkchat/darkchat.theme';
 import DarkChatApp from '../../../apps/darkchat/DarkChatApp';
 import { AdvertisementsApp } from '@apps/advertisements/components/AdvertisementsApp';
+import { BleeterApp } from '@apps/bleeter/components/BleeterApp';
 
 export interface IAppConfig {
   id: string;
@@ -198,6 +199,14 @@ export const APPS: IAppConfig[] = [
     color: '#FFF',
     path: '/advertisements',
     Route: () => <AppRoute id="ADVERTISEMENTS" path="/advertisements" component={AdvertisementsApp} emitOnOpen={false} />,
+  },
+  {
+    id: 'BLEETER',
+    nameLocale: 'APPS_BLEETER',
+    backgroundColor: '#2EAF5D',
+    color: '#FFF',
+    path: '/bleeter',
+    Route: () => <AppRoute id="BLEETER" path="/bleeter" component={BleeterApp} emitOnOpen={false} />,
   },
 ];
 

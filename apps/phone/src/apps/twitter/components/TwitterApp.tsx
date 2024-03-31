@@ -65,6 +65,7 @@ const TwitterApp = () => {
 };
 export default memo(TwitterApp);
 
+/*
 InjectDebugData<any>(
   [
     {
@@ -95,3 +96,4 @@ InjectDebugData<any>(
   ],
   4000,
 );
+*/

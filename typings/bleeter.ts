@@ -1,8 +1,29 @@
+export interface BleeterConfig {
+  resultsPerPage: number;
+  /*
+    showNotifications: boolean;
+    generateProfileNameFromUsers: boolean;
+    allowEditableProfileName: boolean;
+    allowDeleteTweets: boolean;
+    allowReportTweets: boolean;
+    allowRetweet: boolean;
+    characterLimit: number;
+    newLineLimit: number;
+    enableAvatars: boolean;
+    enableEmojis: boolean;
+    enableImages: boolean;
+    maxImages: number;
+    resultsLimit: number;
+  */
+}
+
 export interface Bleet {
   id: number,
   accountId: number,
   characterId: number,
-  repliedId: number,
+  repliedId?: number,
+  rebleetedId?: number,
+  baseAccountId?: number,
   body: string,
   likes: number,
   images?: string,
@@ -12,6 +33,10 @@ export interface Bleet {
   /* From account relation */
   profileName: string,
   avatarUrl: string,
+
+  /* From the base bleet (if replied / rebleeted) */
+  baseProfileName?: string,
+  baseAvatarUrl?: string,
 }
 
 export interface BleeterAccount {
@@ -21,4 +46,5 @@ export interface BleeterAccount {
   avatarUrl: string,
   createdAt: number,
   level: number
+  active: boolean,
 }

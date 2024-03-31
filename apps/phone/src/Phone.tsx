@@ -38,6 +38,7 @@ import { useSystemNotificationListener } from '@os/new-notifications/components/
 import { useNotificationBarListener } from '@os/new-notifications/useNotificationBarListener';
 import { useAdvertisementsService } from '@apps/advertisements/hooks/useAdvertisementsService';
 import { usePlayerPermissions } from '@os/phone/hooks/usePlayerPermissions';
+import { useBleeterService } from '@apps/bleeter/hooks/useBleeterService';
 
 interface PhoneProps {
   notiRefCB: Dispatch<SetStateAction<HTMLElement>>;
@@ -71,6 +72,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
   useSystemNotificationListener();
   useNotificationBarListener();
   useAdvertisementsService();
+  useBleeterService();
   useTwitterService();
   useMatchService();
   useMarketplaceService();

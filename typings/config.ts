@@ -1,5 +1,6 @@
 import { ServicesConfig } from "./services";
 import { AdvertisementsConfig } from "./advertisements";
+import { BleeterConfig } from "./bleeter";
 
 interface TwitterConfig {
   showNotifications: boolean;
@@ -146,4 +147,5 @@ export interface ResourceConfig {
   contacts: Contacts;
   services: ServicesConfig;
   advertisements: AdvertisementsConfig;
+  bleeter: BleeterConfig;
 }

@@ -100,7 +100,8 @@
   "disabledApps": [
     "BROWSER",
     "MATCH",
-    "DARKCHAT"
+    "DARKCHAT",
+    "TWITTER"
   ],
   "apps": [
     "npwd_banking",
@@ -122,6 +123,9 @@
     "hideAfter": 60,
     "bumpFor": 75,
     "maxLength": 200
+  },
+  "bleeter": {
+
   },
   "services": {
     "items": [
