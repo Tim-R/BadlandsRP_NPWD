@@ -18,5 +18,6 @@ import './settings/client-settings';
 import './cl_notifications';
 import './cl_advertisements';
 import './cl_bleeter';
+import './cl_online';
 
 export const ClUtils = new ClientUtils();

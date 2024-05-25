@@ -45,6 +45,8 @@ import {
 import DarkChatApp from '../../../apps/darkchat/DarkChatApp';
 import { AdvertisementsApp } from '@apps/advertisements/components/AdvertisementsApp';
 import { BleeterApp } from '@apps/bleeter/components/BleeterApp';
+import { OnlineApp } from '@apps/online/components/OnlineApp';
+import { OnlineAppWrapper } from '@apps/online/components/OnlineAppWrapper';
 
 export interface IAppConfig {
   id: string;
@@ -208,7 +210,16 @@ export const APPS: IAppConfig[] = [
     path: '/bleeter',
     Route: () => <AppRoute id="BLEETER" path="/bleeter" component={BleeterApp} emitOnOpen={false} />,
   },
+  {
+    id: 'ONLINE',
+    nameLocale: 'APPS_ONLINE',
+    backgroundColor: '#4A3E3D',
+    color: '#FFF',
+    path: '/online',
+    Route: () => <AppRoute id="ONLINE" path="/online" component={OnlineAppWrapper} emitOnOpen={false} />,
+  },
 ];
+
 
 // Example app only in dev
 if (import.meta.env.DEV) {
