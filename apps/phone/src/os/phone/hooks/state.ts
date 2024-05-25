@@ -4,6 +4,7 @@ import { PhonePlayerData } from '@typings/phone';
 
 export const MockPlayerData: PhonePlayerData = {
   id: 0,
+  vrp: 0,
   groups: [
     'staff',
     'moderator',

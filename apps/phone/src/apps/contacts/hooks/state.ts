@@ -16,8 +16,6 @@ export const contacts = atom<Contact[]>({
           undefined,
           buildRespObj(BrowserContactsState),
         );
-
-        console.log(resp);
         return resp.data;
       } catch (e) {
         console.error(e);

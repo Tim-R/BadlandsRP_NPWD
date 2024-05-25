@@ -1,5 +1,7 @@
 export interface BleeterConfig {
   resultsPerPage: number;
+  maxAccountNameLength: number;
+  maxAccountsPerPlayer: number;
   /*
     showNotifications: boolean;
     generateProfileNameFromUsers: boolean;
@@ -17,6 +19,12 @@ export interface BleeterConfig {
   */
 }
 
+export interface BleetsFetchResponse {
+  bleets: Bleet[],
+  accounts: BleeterAccount[],
+  hasMore: boolean,
+}
+
 export interface Bleet {
   id: number,
   accountId: number,
@@ -31,20 +39,43 @@ export interface Bleet {
   createdAt: number,
 
   /* From account relation */
-  profileName: string,
-  avatarUrl: string,
-
-  /* From the base bleet (if replied / rebleeted) */
-  baseProfileName?: string,
-  baseAvatarUrl?: string,
+  // profileName: string,
+  // avatarUrl: string,
 }
 
 export interface BleeterAccount {
   id: number,
-  characterId: number,
+  vrpId?: number,
+  characterId?: number,
   profileName: string,
   avatarUrl: string,
-  createdAt: number,
+  createdAt?: number,
   level: number
-  active: boolean,
+  active?: boolean,
+}
+
+export enum BleeterAccountLevel {
+  LEVEL_MEMBER = 1,
+  LEVEL_ADMIN = 2,
+}
+
+export interface BleeterProps {
+  bleet: Bleet,
+}
+
+export enum BleeterEvents {
+  FETCH_MY_ACCOUNTS = 'npwd:fetchMyBleeterAccounts',
+  EDIT_ACCOUNT = 'npwd:editBleeterAccount',
+  DELETE_ACCOUNT = 'npwd:deleteBleeterAccount',
+  FETCH_ACCOUNT_USERS = 'npwd:fetchBleeterAccountUsers',
+  CREATE_ACCOUNT = 'npwd:createBleeterAccount',
+  SET_ACCOUNT_ACTIVE = 'npwd:setActiveBleeterAccount',
+  DELETE_ACCOUNT_USER = 'npwd:deleteBleeterAccountUser',
+  ADD_ACCOUNT_USER = 'npwd:addBleeterAccountUser',
+  EDIT_ACCOUNT_USER = 'npwd:editBleeterAccountUser',
+
+  EDIT_ACCOUNT_BROADCAST = 'npwd:broadcastEditBleeterAccount',
+  DELETE_ACCOUNT_BROADCAST = 'npwd:broadcastDeleteBleeterAccount',
+
+  FETCH_BLEETS_HOME = 'npwd:fetchBleetsHomepage',
 }

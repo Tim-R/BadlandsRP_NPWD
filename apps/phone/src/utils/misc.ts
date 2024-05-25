@@ -16,6 +16,14 @@ export const buildRespObj = (
   errorMsg,
 });
 
+export function defaultOrMock<T = any>(data: T, mock : T) {
+  if (isEnvBrowser()) {
+    return mock;
+  }
+
+  return data;
+}
+
 export const initials = (fullName: string) => {
   // Create a array from fullName
   if (!fullName) return 'X';
