@@ -125,7 +125,9 @@
     "maxLength": 200
   },
   "bleeter": {
-
+    "resultsPerPage": 25,
+    "maxAccountNameLength": 40,
+    "maxAccountsPerPlayer": 6
   },
   "online": {
 

@@ -51,6 +51,7 @@ export interface FxServerResponse {
 
 export interface PhonePlayerData {
   id: number,
+  vrp: number,
   groups: string[],
   permissions: string[],
   aptitudes: Aptitude[],

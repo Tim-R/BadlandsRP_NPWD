@@ -277,6 +277,10 @@ class _PlayerService {
     this.character(source).log(logType, message, context);
   }
 
+  getVrpId(source: number): number {
+    return Number(this.character(source).get('identifier'));
+  }
+
   getCharacterId(source: number): number {
     return Number(this.character(source).get('id'));
   }

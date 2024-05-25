@@ -10,6 +10,10 @@ export function sendMessage(app: string, method: string, data: any): void {
   });
 }
 
+export function sendBleeterMessage(method: string, data: any = {}): void {
+  return sendMessage(apps.BLEETER, method, data);
+}
+
 export function sendAdvertisementsMessage(method: string, data: any = {}): void {
   return sendMessage(apps.ADVERTISEMENTS, method, data);
 }
