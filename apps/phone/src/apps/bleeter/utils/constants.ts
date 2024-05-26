@@ -15,6 +15,42 @@ export const MockBleeterBleets: Bleet[] = [
     likes: 0,
     rebleets: 0,
     createdAt: 1712516778,
+  },
+  {
+    id: 2,
+    accountId: 1,
+    characterId: 9102,
+    body: "The San Andreas Highway Patrol thanks all citizens for their safe driving!",
+    likes: 0,
+    rebleets: 0,
+    createdAt: 1712518779,
+  },
+  {
+    id: 3,
+    accountId: 1,
+    characterId: 9102,
+    body: "The San Andreas Highway Patrol thanks all citizens for their safe driving!",
+    likes: 0,
+    rebleets: 0,
+    createdAt: 1716724495,
+  },
+  {
+    id: 4,
+    accountId: 1,
+    characterId: 9102,
+    body: "The San Andreas Highway Patrol thanks all citizens for their safe driving!",
+    likes: 0,
+    rebleets: 0,
+    createdAt: 1712516781,
+  },
+  {
+    id: 5,
+    accountId: 1,
+    characterId: 9102,
+    body: "The San Andreas Highway Patrol thanks all citizens for their safe driving!",
+    likes: 0,
+    rebleets: 0,
+    createdAt: 1712516782,
   }
 
   /*
@@ -79,7 +115,8 @@ export const MockBleeterAccounts: BleeterAccount[] = [
 
 export const MockBleeterHome: BleetsFetchResponse = {
   bleets: MockBleeterBleets,
-  accounts: MockBleeterAccounts
+  accounts: MockBleeterAccounts,
+  hasMore: false,
 }
 
 export const MockBleeterAccountUsers: BleeterAccount[] = [

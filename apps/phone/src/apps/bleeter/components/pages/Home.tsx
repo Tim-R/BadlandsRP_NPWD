@@ -47,7 +47,7 @@ export const Home: React.FC = () => {
       return;
     }
 
-    bleetsRendered = bleets
+    bleetsRendered = [...bleets]
       .sort((a, b) => {
         return b.createdAt - a.createdAt;
       })
@@ -71,7 +71,11 @@ export const Home: React.FC = () => {
           </div>
         }
       >
-        {bleets && bleets.map((bleet) => <BleetItem key={bleet.id} bleet={bleet} /> )}
+        {bleets && [...bleets]
+          .sort((a, b) => {
+            return b.createdAt - a.createdAt;
+          })
+          .map((bleet) => <BleetItem key={bleet.id} bleet={bleet} /> )}
       </InfiniteScroll>
 
     </div>
