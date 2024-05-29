@@ -6,7 +6,7 @@ import { BleeterProps } from '@typings/bleeter';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
-export const BleetItem: React.FC<BleeterProps> = ({ bleet }) => {
+export const BleetItem: React.FC<BleeterProps> = ({ bleet, deleteBleet }) => {
   const likes = useLikesValue();
   const setLikes = useSetLikes();
   const setBleets = useSetBleets();
@@ -62,7 +62,7 @@ export const BleetItem: React.FC<BleeterProps> = ({ bleet }) => {
   }
 
   const clickedDeleteConfirmButton = () => {
-
+    deleteBleet(bleet.id);
   }
 
   const clickedDeleteButton = () => {

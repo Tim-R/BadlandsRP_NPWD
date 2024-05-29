@@ -6,6 +6,9 @@ import fetchNui from '@utils/fetchNui';
 import { ServerPromiseResp } from '@typings/common';
 import { Bleet, BleeterEvents, BleetsFetchResponse } from '@typings/bleeter';
 import { BleeterIcon } from '../BleeterIcon';
+import Alert from '@mui/material/Alert';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'; 
+
 
 export const Home: React.FC = () => {
   const accounts = useAccountsValue();
@@ -15,6 +18,7 @@ export const Home: React.FC = () => {
 
   const hasMore = useHasMoreValue();
   const setHasMore = useSetHasMore();
+  const [showAlert, setShowAlert] = useState(false);
 
   const fetchBleets = async () => {
     console.log("trying to load more bleets from: " + Math.min(...bleets.map(o => o.id)));
@@ -40,6 +44,28 @@ export const Home: React.FC = () => {
     }
   }
 
+// need some user permissions to delete bleets
+  const deleteBleet = async (bleetId) => {
+    console.log('Deleting bleet')
+
+    try {
+      // Add call to backend 
+      // delete bleet in database by id???
+
+      // then update state on success
+      setBleets(bleets => bleets.filter(bleet => bleet.id !== bleetId))
+
+      // Bleet delete alert
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+    } catch (e) {
+      console.error('Error deleting bleet:', e)
+    }
+
+  }
+
   let bleetsRendered = [];
 
   useEffect(() => {
@@ -52,7 +78,7 @@ export const Home: React.FC = () => {
         return b.createdAt - a.createdAt;
       })
       .map((bleet) => {
-        return <BleetItem key={bleet.id} bleet={bleet} />
+        return <BleetItem key={bleet.id} bleet={bleet} deleteBleet={deleteBleet}/>
       });
   }, [bleets]);
 
@@ -60,7 +86,7 @@ export const Home: React.FC = () => {
     <div className="flex flex-col" id="bleeter-home">
       <InfiniteScroll
         dataLength={bleets.length}
-        height={'55vh'}
+        height={'58vh'}
         next={fetchBleets}
         hasMore={hasMore}
         loader={<h4>Loading... {bleets.length} {bleetsRendered.length}</h4>}
@@ -75,9 +101,13 @@ export const Home: React.FC = () => {
           .sort((a, b) => {
             return b.createdAt - a.createdAt;
           })
-          .map((bleet) => <BleetItem key={bleet.id} bleet={bleet} /> )}
+          .map((bleet) => <BleetItem key={bleet.id} bleet={bleet} deleteBleet={deleteBleet}/> )}
       </InfiniteScroll>
-
+      {showAlert && (
+        <Alert icon={<CheckCircleIcon fontSize="inherit" />} severity="success">
+          Bleet Deleted
+        </Alert>
+      )}
     </div>
   );
 };
