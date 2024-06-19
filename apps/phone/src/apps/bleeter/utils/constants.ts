@@ -9,9 +9,9 @@ export const MockBleeterLikes: number[] = [
 export const MockBleeterBleets: Bleet[] = [
   {
     id: 1,
-    accountId: 1,
+    accountId: 0,
     characterId: 9102,
-    body: "The San Andreas Highway Patrol thanks all citizens for their safe driving!",
+    body: "I am account id 0",
     likes: 5,
     rebleets: 0,
     createdAt: 1712516778,
@@ -36,22 +36,22 @@ export const MockBleeterBleets: Bleet[] = [
   },
   {
     id: 4,
-    accountId: 1,
+    accountId: 2,
     characterId: 9102,
-    body: "The San Andreas Highway Patrol thanks all citizens for their safe driving!",
+    body: "I am account id 2",
     likes: 0,
     rebleets: 0,
     createdAt: 1712516781,
   },
   {
     id: 5,
-    accountId: 1,
+    accountId: 3,
     characterId: 9102,
-    body: "The San Andreas Highway Patrol thanks all citizens for their safe driving!",
+    body: "I am account id 3",
     likes: 2,
     rebleets: 0,
     createdAt: 1712516782,
-  }
+  },
 
   /*
   const BLEET_SELECT_FIELDS = `

@@ -156,7 +156,7 @@ export const BleetItem: React.FC<BleeterProps> = ({ bleet, deleteBleet }) => {
           </Button>
         }
 
-        { (!deleting && (canAccess || isModerator)) &&
+        { (!deleting && (currentAccount.id === bleet.accountId) || isModerator) &&
           <IconButton
             onClick={clickedDeleteButton}
             style={{color: !canAccess ? 'orange' : ''}}
