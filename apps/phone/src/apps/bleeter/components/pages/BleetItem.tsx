@@ -1,10 +1,12 @@
 import { useAccountsValue, useCurrentAccount, useLikesValue, useSetBleets, useSetLikes } from '@apps/bleeter/hooks/state';
 import { Delete, Favorite, KeyboardBackspace, MoreVert, PermIdentity, Person, Repeat, Reply, Share } from '@mui/icons-material';
+import CommentIcon from '@mui/icons-material/Comment';
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, IconButton, Tooltip, Typography } from '@mui/material';
 import { useIsModeratorOrGreater, useIsSupportStaffOrGreater } from '@os/phone/hooks/usePlayerPermissions';
 import { BleeterProps } from '@typings/bleeter';
 import dayjs from 'dayjs';
 import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 
 export const BleetItem: React.FC<BleeterProps> = ({ bleet, deleteBleet }) => {
   const likes = useLikesValue();
@@ -132,8 +134,8 @@ export const BleetItem: React.FC<BleeterProps> = ({ bleet, deleteBleet }) => {
 
         { /* Reply button */ }
         { (!deleting && currentAccount) &&
-          <IconButton>
-            <Reply />
+          <IconButton component={Link} to={`/bleeter/${bleet.id}`}>
+            <CommentIcon />
           </IconButton>
         }
 

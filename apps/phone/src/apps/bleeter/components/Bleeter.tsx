@@ -6,6 +6,7 @@ import { useFirstLoadValue, usePageValue, useSetAccounts, useSetBleets, useSetFi
 import { Home } from './pages/Home';
 import { Trending } from './pages/Trending';
 import { Me } from './pages/Me';
+import { Replies } from './pages/Replies';
 import { Top } from './pages/Top';
 import fetchNui from '@utils/fetchNui';
 import { ServerPromiseResp } from '@typings/common';
@@ -66,6 +67,7 @@ export const Bleeter: React.FC = () => {
             { page == '/bleeter/top' && <Top /> }
             { page == '/bleeter/trending' && <Trending /> }
             { page == '/bleeter/me' && <Me /> }
+            { page == '/bleeter/:id' && <Replies />}
           </Content>
         </Container>
       </BleeterThemeProvider>
