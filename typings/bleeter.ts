@@ -61,7 +61,7 @@ export enum BleeterAccountLevel {
 
 export interface BleeterProps {
   bleet: Bleet,
-  deleteBleet: (bleetId: number) => Promise<void>
+  deleteBleet?: (bleetId: number) => Promise<void>
 }
 
 export enum BleeterEvents {
