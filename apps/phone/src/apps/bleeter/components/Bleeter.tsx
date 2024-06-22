@@ -67,7 +67,7 @@ export const Bleeter: React.FC = () => {
             { page == '/bleeter/top' && <Top /> }
             { page == '/bleeter/trending' && <Trending /> }
             { page == '/bleeter/me' && <Me /> }
-            { page == '/bleeter/:id' && <Replies />}
+            { page == '/bleeter/replies' && <Replies />}
           </Content>
         </Container>
       </BleeterThemeProvider>

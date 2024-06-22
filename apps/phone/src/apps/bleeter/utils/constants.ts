@@ -6,6 +6,30 @@ export const MockBleeterLikes: number[] = [
 
 ];
 
+export const MockBleeterBleetsReplies: Bleet[] = [
+  {
+    id: 8,
+    accountId: 0,
+    characterId: 9102,
+    body: "reply to a bleet",
+    likes: 5,
+    rebleets: 0,
+    createdAt: 1712516778,
+    repliedId: 1,
+  },
+  {
+    id: 9,
+    accountId: 1,
+    characterId: 9102,
+    body: "another reply to a bleet",
+    likes: 3,
+    rebleets: 0,
+    createdAt: 1712518779,
+    repliedId: 1,
+  },
+
+]
+
 export const MockBleeterBleets: Bleet[] = [
   {
     id: 1,

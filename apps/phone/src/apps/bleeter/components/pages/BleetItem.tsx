@@ -1,4 +1,4 @@
-import { useAccountsValue, useCurrentAccount, useLikesValue, useSetBleets, useSetLikes } from '@apps/bleeter/hooks/state';
+import { useAccountsValue, useCurrentAccount, useLikesValue, useSetBleets, useSetLikes, useSetPage } from '@apps/bleeter/hooks/state';
 import { Delete, Favorite, KeyboardBackspace, MoreVert, PermIdentity, Person, Repeat, Reply, Share } from '@mui/icons-material';
 import CommentIcon from '@mui/icons-material/Comment';
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, IconButton, Tooltip, Typography } from '@mui/material';
@@ -21,6 +21,8 @@ export const BleetItem: React.FC<BleeterProps> = ({ bleet, deleteBleet }) => {
   const canAccess = account.level && account.level >= 1;
   const isSupportStaff = useIsSupportStaffOrGreater();
   const isModerator = useIsModeratorOrGreater();
+
+  const setPage = useSetPage();
 
   const clickedLikeButton = () => {
     let change = 0;
@@ -70,6 +72,11 @@ export const BleetItem: React.FC<BleeterProps> = ({ bleet, deleteBleet }) => {
   const clickedDeleteButton = () => {
     setDeleting(true);
   }
+
+  const handleReplyClick = (bleetId) => {
+    setPage('/bleeter/replies');
+    console.log(`Reply button clicked for bleet id: ${bleetId}`);
+  };
 
   return (
     <Card className="w-full" variant="outlined" style={{position: "relative"}}>
@@ -134,7 +141,7 @@ export const BleetItem: React.FC<BleeterProps> = ({ bleet, deleteBleet }) => {
 
         { /* Reply button */ }
         { (!deleting && currentAccount) &&
-          <IconButton component={Link} to={`/bleeter/${bleet.id}`}>
+          <IconButton component={Link} to={`/bleeter/replies/${bleet.id}`} onClick={() => handleReplyClick(bleet.id)}>
             <CommentIcon />
           </IconButton>
         }
