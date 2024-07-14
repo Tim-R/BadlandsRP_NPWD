@@ -1,4 +1,4 @@
-import { BleeterAccount, BleeterEvents, BleetsFetchResponse } from "@typings/bleeter";
+import { BleeterAccount, BleeterEvents, BleetsFetchResponse, RepliesFetchResponse } from "@typings/bleeter";
 import { onNetPromise } from "../lib/PromiseNetEvents/onNetPromise";
 import BleeterService from "./bleeter.service";
 import { mainLogger } from "../sv_logger";
@@ -108,6 +108,16 @@ onNetPromise<{ id: number, accountId: number }, boolean>(
   async (reqObj, resp) => {
     BleeterService.handleDeleteBleet(reqObj, resp).catch((e) => {
       mainLogger.error(`Error occurred in delete bleet (${reqObj.source}), Error: ${e.message}`);
+      resp({ status: 'error', errorMsg: 'INTERNAL_ERROR' });
+    });
+  },
+);
+
+onNetPromise<{ vrpId: number, repliedId: number }, RepliesFetchResponse>(
+  BleeterEvents.FETCH_BLEETS_REPLY,
+  async (reqObj, resp) => {
+    BleeterService.handleFetchReplies(reqObj, resp).catch((e) => {
+      mainLogger.error(`Error occurred in fetch Bleeter replies (${reqObj.source}), Error: ${e.message}`);
       resp({ status: 'error', errorMsg: 'INTERNAL_ERROR' });
     });
   },

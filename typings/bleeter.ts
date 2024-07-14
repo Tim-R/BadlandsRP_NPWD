@@ -25,6 +25,10 @@ export interface BleetsFetchResponse {
   hasMore: boolean,
 }
 
+export interface RepliesFetchResponse {
+  bleets: Bleet[]
+}
+
 export interface Bleet {
   id: number,
   accountId: number,

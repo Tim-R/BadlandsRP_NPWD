@@ -271,6 +271,18 @@ class _BleeterService {
     resp({ status: 'ok', data: success });
     emitNet(BleeterEvents.DELETE_BLEET, -1, reqObj.data.id);
   }
+
+  async handleFetchReplies(
+    reqObj: PromiseRequest<{ vrpId: number, repliedId: number }>,
+    resp: PromiseEventResp<BleetsFetchResponse>,
+  ) {
+    const response = await this.bleeterDB.fetchReplies(reqObj.data.vrpId, reqObj.data.repliedId);
+
+    console.log('handleFetchBleets response');
+    console.log(response);
+
+    resp({ status: 'ok', data: response });
+  }
 }
 
 const BleeterService = new _BleeterService();

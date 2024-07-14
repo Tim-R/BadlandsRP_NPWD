@@ -1,6 +1,6 @@
 import { ResourceConfig } from "@typings/config";
 import { getConfig } from "../utils/config";
-import { Bleet, BleeterAccount, BleeterAccountLevel, BleetsFetchResponse } from "@typings/bleeter";
+import { Bleet, BleeterAccount, BleeterAccountLevel, BleetsFetchResponse, RepliesFetchResponse } from "@typings/bleeter";
 import { DbInterface } from "@npwd/database";
 import { config } from '@npwd/config/server';
 
@@ -29,6 +29,30 @@ export class _BleeterDB {
 
   async fetchBleet(bleetId: number): Promise<Bleet> {
     return null; // TODO: function stub
+  }
+
+  async fetchReplies(vrpId: number, repliedId: number): Promise<RepliesFetchResponse> {
+    let query = `
+      SELECT ${BLEET_SELECT_FIELDS}
+      FROM npwd_bleeter_bleets
+      WHERE
+        npwd_bleeter_bleets.replied_id = ? AND
+      ORDER BY
+        npwd_bleeter_bleets.id DESC
+    `;
+    // maybe add limit to query to prevent too many replies, doubt there will be tons of replies and cba to add pagination atm. Will do if needed.
+
+    const bleets = await DbInterface.fetch<Bleet[]>(query);
+
+    if (bleets.length == 0) {
+      return {
+        bleets: []
+      }
+    }
+
+    return {
+      bleets: bleets
+    }
   }
 
   /*
