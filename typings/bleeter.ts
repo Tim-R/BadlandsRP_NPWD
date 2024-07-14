@@ -79,4 +79,7 @@ export enum BleeterEvents {
   DELETE_ACCOUNT_BROADCAST = 'npwd:broadcastDeleteBleeterAccount',
 
   FETCH_BLEETS_HOME = 'npwd:fetchBleetsHomepage',
+  FETCH_BLEETS_REPLY = 'npwd:fetchBleetsReply',
+
+  DELETE_BLEET = 'npwd:deleteBleet',
 }

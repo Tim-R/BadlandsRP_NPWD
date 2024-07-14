@@ -158,8 +158,15 @@ export class _BleeterDB {
     return null; // TODO: function stub
   }
 
-  async deleteBleet(bleetId: number): Promise<number> {
-    return null; // TODO: function stub
+  async deleteBleet(id: number): Promise<boolean> {
+    const query = `
+      DELETE FROM npwd_bleeter_bleets
+      WHERE
+        id = ?`;
+
+    const affectedRows = await DbInterface.exec(query, [id]);
+
+    return (affectedRows > 0);
   }
 
   // editBleet ?

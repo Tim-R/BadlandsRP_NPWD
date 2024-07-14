@@ -102,3 +102,13 @@ onNetPromise<{ vrpId: number, excludedAccountIds?: number[], from?: number }, Bl
     });
   },
 );
+
+onNetPromise<{ id: number, accountId: number }, boolean>(
+  BleeterEvents.DELETE_BLEET,
+  async (reqObj, resp) => {
+    BleeterService.handleDeleteBleet(reqObj, resp).catch((e) => {
+      mainLogger.error(`Error occurred in delete bleet (${reqObj.source}), Error: ${e.message}`);
+      resp({ status: 'error', errorMsg: 'INTERNAL_ERROR' });
+    });
+  },
+);

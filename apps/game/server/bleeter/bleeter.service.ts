@@ -250,6 +250,27 @@ class _BleeterService {
 
     return resp({ status: 'ok', data: success });
   }
+
+  async handleDeleteBleet(
+    reqObj: PromiseRequest<{ id: number, accountId: number }>,
+    resp: PromiseEventResp<boolean>,
+  ) {
+    let characterId = PlayerService.getCharacterId(reqObj.source);
+    let account = await this.bleeterDB.fetchAccount('id', reqObj.data.accountId);
+
+    if(characterId != account.characterId) {
+      return resp({ status: 'error', errorMsg: 'Access denied' });
+    }
+
+    const success = await this.bleeterDB.deleteBleet(reqObj.data.id);
+
+    if(!success) {
+      return resp({ status: 'error', errorMsg: 'Unknown error' });
+    }
+
+    resp({ status: 'ok', data: success });
+    emitNet(BleeterEvents.DELETE_BLEET, -1, reqObj.data.id);
+  }
 }
 
 const BleeterService = new _BleeterService();
