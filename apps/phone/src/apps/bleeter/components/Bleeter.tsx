@@ -14,6 +14,7 @@ import { BleeterEvents, BleetsFetchResponse } from '@typings/bleeter';
 import { buildRespObj } from '@utils/misc';
 import { MockBleeterHome } from '../utils/constants';
 import usePlayerData from '@os/phone/hooks/usePlayerData';
+import { CreateBleetForm } from './pages/CreateBleetForm';
 
 const Container = styled(Paper)`
   flex: 1;
@@ -68,6 +69,7 @@ export const Bleeter: React.FC = () => {
             { page == '/bleeter/trending' && <Trending /> }
             { page == '/bleeter/me' && <Me /> }
             { page == '/bleeter/replies' && <Replies />}
+            { page == '/bleeter/createbleetform' && <CreateBleetForm />}
           </Content>
         </Container>
       </BleeterThemeProvider>

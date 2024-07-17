@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AppWrapper } from '@ui/components';
 import { AppTitle } from '@ui/components/AppTitle';
 import { AppContent } from '@ui/components/AppContent';
@@ -7,9 +7,10 @@ import { useApp } from '@os/apps/hooks/useApps';
 import { BottomNavigation, BottomNavigationAction, Fab } from '@mui/material';
 import { useCurrentAccount, usePageValue, useSetPage } from '../hooks/state';
 import { AccountBox, HomeRounded, Star, TrendingUp } from '@mui/icons-material';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import useStyles from '../bleeter.styles';
+
 
 export const BleeterApp: React.FC = () => {
   const classes = useStyles();
@@ -24,12 +25,7 @@ export const BleeterApp: React.FC = () => {
   }
 
   const onClickCreate = () => {
-    /*
-    setModalText(`Create advertisement`);
-    setModalAcceptText(`Pay $${config.advertisements.priceInitial}`);
-    setModalAction('create');
-    setModalOpen(true);
-    */
+    setPage('/bleeter/createbleetform');
   };
 
   return (
@@ -39,7 +35,7 @@ export const BleeterApp: React.FC = () => {
         <Bleeter />
       </AppContent>
       { (page == '/bleeter' && currentAccount) &&
-        <Fab className={`bg-green-100 text-green-500 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-neutral-700 ${classes.absolute}`} onClick={onClickCreate} color="primary">
+        <Fab className={`bg-green-100 text-green-500 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-neutral-700 ${classes.absolute}`} component={Link} to={`/bleeter/newbleet`} onClick={onClickCreate} color="primary">
           <AddIcon />
         </Fab>
       }
