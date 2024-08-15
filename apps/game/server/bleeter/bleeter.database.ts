@@ -1,7 +1,13 @@
-import { ResourceConfig } from "@typings/config";
-import { getConfig } from "../utils/config";
-import { Bleet, BleeterAccount, BleeterAccountLevel, BleetsFetchResponse, RepliesFetchResponse } from "@typings/bleeter";
-import { DbInterface } from "@npwd/database";
+import { ResourceConfig } from '@typings/config';
+import { getConfig } from '../utils/config';
+import {
+  Bleet,
+  BleeterAccount,
+  BleeterAccountLevel,
+  BleetsFetchResponse,
+  RepliesFetchResponse,
+} from '@typings/bleeter';
+import { DbInterface } from '@npwd/database';
 import { config } from '@npwd/config/server';
 
 const BLEET_SELECT_FIELDS = `
@@ -9,12 +15,10 @@ const BLEET_SELECT_FIELDS = `
   npwd_bleeter_bleets.account_id as accountId,
   npwd_bleeter_bleets.character_id as characterId,
   npwd_bleeter_bleets.replied_id as repliedId,
-  npwd_bleeter_bleets.rebleeted_id as rebleetedId,
   npwd_bleeter_bleets.base_account_id as baseAccountId,
   npwd_bleeter_bleets.body,
   npwd_bleeter_bleets.likes,
   npwd_bleeter_bleets.images,
-  npwd_bleeter_bleets.rebleets,
   UNIX_TIMESTAMP(npwd_bleeter_bleets.created_at) as createdAt
 `;
 
@@ -33,7 +37,7 @@ export class _BleeterDB {
 
   async fetchReplies(vrpId: number, repliedId: number): Promise<RepliesFetchResponse> {
     let query = `
-      SELECT ${BLEET_SELECT_FIELDS}
+      SELECT *
       FROM npwd_bleeter_bleets
       WHERE
         npwd_bleeter_bleets.replied_id = ? AND
@@ -46,13 +50,13 @@ export class _BleeterDB {
 
     if (bleets.length == 0) {
       return {
-        bleets: []
-      }
+        bleets: [],
+      };
     }
 
     return {
-      bleets: bleets
-    }
+      bleets: bleets,
+    };
   }
 
   /*
@@ -73,12 +77,60 @@ export class _BleeterDB {
     }
   */
 
-  async fetchBleetsHome(vrpId: number, excludedAccountIds: number[] = [], from?: number): Promise<BleetsFetchResponse> {
+  async addBleet(bleet: any) {
+    console.log(bleet, '<----------------------------------');
+    const columns = [];
+    const placeholders = [];
+    const values = [];
+
+    columns.push('account_id');
+    placeholders.push('?');
+    values.push(bleet.accountId);
+
+    columns.push('character_id');
+    placeholders.push('?');
+    values.push(bleet.characterId);
+
+    if (bleet.repliedId !== undefined) {
+      columns.push('replied_id');
+      placeholders.push('?');
+      values.push(bleet.repliedId);
+    }
+
+    if (bleet.body !== undefined) {
+      columns.push('body');
+      placeholders.push('?');
+      values.push(bleet.body);
+    }
+
+    if (bleet.images !== undefined) {
+      columns.push('images');
+      placeholders.push('?');
+      values.push(bleet.images);
+    }
+
+    const query = `
+    INSERT INTO npwd_bleeter_bleets
+      (${columns.join(', ')}) VALUES
+      (${placeholders.join(', ')})
+  `;
+
+    console.log(query);
+
+    const affectedRows = await DbInterface.exec(query, values);
+
+    return affectedRows > 0;
+  }
+
+  async fetchBleetsHome(
+    vrpId: number,
+    excludedAccountIds: number[] = [],
+    from?: number,
+  ): Promise<BleetsFetchResponse> {
     let query = `
       SELECT ${BLEET_SELECT_FIELDS}
-      FROM npwd_bleeter_bleets
-      WHERE
-        npwd_bleeter_bleets.id < (SELECT MAX(npwd_bleeter_bleets.id) FROM npwd_bleeter_bleets)
+      FROM 
+        npwd_bleeter_bleets
       ORDER BY
         npwd_bleeter_bleets.id DESC
       LIMIT ?
@@ -86,7 +138,7 @@ export class _BleeterDB {
 
     let bindings = [this.bleetsPerPage];
 
-    if(from) {
+    if (from) {
       query = `
         SELECT ${BLEET_SELECT_FIELDS}
         FROM npwd_bleeter_bleets
@@ -99,25 +151,27 @@ export class _BleeterDB {
 
       bindings = [from, this.bleetsPerPage];
     }
+    console.log(query, '<---------------------------------- first query');
+    console.log(bindings, '<---------------------------------- first bindings');
 
     const bleets = await DbInterface.fetch<Bleet[]>(query, bindings);
 
-    if(bleets.length == 0) {
+    if (bleets.length == 0) {
       return {
         bleets: [],
         accounts: [],
         hasMore: false,
-      }
+      };
     }
 
     const accountIds: number[] = [];
 
-    bleets.forEach(bleet => {
-      if(accountIds.indexOf(bleet.accountId) === -1) {
+    bleets.forEach((bleet) => {
+      if (accountIds.indexOf(bleet.accountId) === -1) {
         accountIds.push(bleet.accountId);
       }
 
-      if(bleet.baseAccountId && accountIds.indexOf(bleet.baseAccountId) === -1) {
+      if (bleet.baseAccountId && accountIds.indexOf(bleet.baseAccountId) === -1) {
         accountIds.push(bleet.baseAccountId);
       }
     });
@@ -135,23 +189,25 @@ export class _BleeterDB {
         LEFT OUTER JOIN npwd_bleeter_account_access
           ON
             npwd_bleeter_accounts.id = npwd_bleeter_account_access.account_id AND
-            npwd_bleeter_account_access.vrp_id = 58794
+            npwd_bleeter_account_access.vrp_id = 85898
       WHERE
         npwd_bleeter_accounts.id IN (${accountIds.join(', ')})
     `;
 
-    if(excludedAccountIds.length > 0) {
+    if (excludedAccountIds.length > 0) {
       queryAccounts += `
         AND npwd_bleeter_accounts.id NOT IN (${excludedAccountIds.join(', ')})
       `;
     }
+
+    console.log(queryAccounts, '<----------------------------------');
 
     const accounts = await DbInterface.fetch<BleeterAccount[]>(queryAccounts);
 
     return {
       bleets: bleets,
       accounts: accounts,
-      hasMore: (bleets.length == this.bleetsPerPage)
+      hasMore: bleets.length == this.bleetsPerPage,
     };
   }
 
@@ -190,18 +246,19 @@ export class _BleeterDB {
 
     const affectedRows = await DbInterface.exec(query, [id]);
 
-    return (affectedRows > 0);
+    return affectedRows > 0;
   }
 
   // editBleet ?
 
-  async addBleet(bleet: Bleet): Promise<number> {
-    return null; // TODO: function stub
-  }
-
   // TODO: account functions
 
-  async createAccount(vrpId: number, characterId: number, profileName: string, avatarUrl?: string): Promise<BleeterAccount> {
+  async createAccount(
+    vrpId: number,
+    characterId: number,
+    profileName: string,
+    avatarUrl?: string,
+  ): Promise<BleeterAccount> {
     const query = `
       INSERT INTO npwd_bleeter_accounts
         (vrp_id, character_id, profile_name, avatar_url) VALUES
@@ -210,16 +267,19 @@ export class _BleeterDB {
 
     const accountId = await DbInterface.insert(query, [vrpId, characterId, profileName, avatarUrl]);
 
-    if(!accountId) {
+    if (!accountId) {
       return null;
     }
 
     // Add access pivot
-    await DbInterface.insert(`
+    await DbInterface.insert(
+      `
       INSERT INTO npwd_bleeter_account_access
         (vrp_id, character_id, accessor_id, account_id, level) VALUES
         (?, ?, ?, ?, ?)
-    `, [vrpId, characterId, accountId, accountId, BleeterAccountLevel.LEVEL_ADMIN])
+    `,
+      [vrpId, characterId, accountId, accountId, BleeterAccountLevel.LEVEL_ADMIN],
+    );
 
     return await this.fetchAccount('id', accountId);
   }
@@ -243,7 +303,7 @@ export class _BleeterDB {
 
     let accounts = await DbInterface.fetch<BleeterAccount[]>(query, [value]);
 
-    if(!accounts) {
+    if (!accounts) {
       return [];
     }
 
@@ -253,14 +313,18 @@ export class _BleeterDB {
   async fetchAccount(column: string, value: any): Promise<BleeterAccount> {
     const accounts = await this.fetchAccounts(column, value);
 
-    if(!accounts || accounts.length == 0) {
+    if (!accounts || accounts.length == 0) {
       return null;
     }
 
     return accounts[0];
   }
 
-  async editAccount(accountId: number, profileName: string, avatarUrl: string): Promise<BleeterAccount> {
+  async editAccount(
+    accountId: number,
+    profileName: string,
+    avatarUrl: string,
+  ): Promise<BleeterAccount> {
     const query = `
       UPDATE npwd_bleeter_accounts
       SET
@@ -272,7 +336,7 @@ export class _BleeterDB {
 
     const affectedRows = await DbInterface.exec(query, [profileName, avatarUrl, accountId]);
 
-    if(affectedRows == 0) {
+    if (affectedRows == 0) {
       return null;
     }
 
@@ -280,7 +344,8 @@ export class _BleeterDB {
   }
 
   async deleteAccount(accountId: number): Promise<boolean> {
-    await DbInterface.exec(`
+    await DbInterface.exec(
+      `
       UPDATE npwd_bleeter_accounts
       SET
         deleted_at = NOW()
@@ -288,23 +353,31 @@ export class _BleeterDB {
         id = ?
       LIMIT
         1
-    `, [accountId]);
+    `,
+      [accountId],
+    );
 
-    await DbInterface.exec(`
+    await DbInterface.exec(
+      `
       UPDATE npwd_bleeter_bleets
       SET
         deleted_at = NOW()
       WHERE
         account_id = ? OR
         base_account_id = ?
-    `, [accountId, accountId]);
+    `,
+      [accountId, accountId],
+    );
 
-    await DbInterface.exec(`
+    await DbInterface.exec(
+      `
       DELETE FROM npwd_bleeter_account_access
       WHERE
         account_id = ? OR
         accessor_id = ?
-    `, [accountId, accountId]);
+    `,
+      [accountId, accountId],
+    );
 
     return true;
   }
@@ -317,7 +390,7 @@ export class _BleeterDB {
 
     const affectedRows = await DbInterface.exec(query, [accountId, vrpId]);
 
-    return (affectedRows > 0);
+    return affectedRows > 0;
   }
 
   async getCharacterAccess(accountId: number, characterId: number): Promise<number> {
@@ -332,7 +405,7 @@ export class _BleeterDB {
 
     const result = await DbInterface.fetch<BleeterAccount[]>(query, [accountId, characterId]);
 
-    if(!result || result.length == 0) {
+    if (!result || result.length == 0) {
       return 0;
     }
 
@@ -349,7 +422,7 @@ export class _BleeterDB {
 
     const affectedRows = await DbInterface.exec(query, [accountId, characterId]);
 
-    return (affectedRows > 0);
+    return affectedRows > 0;
   }
 
   async addAccountUser(user: BleeterAccount, accountId: number, level: number) {
@@ -359,13 +432,21 @@ export class _BleeterDB {
         (?, ?, ?, ?, ?)
     `;
 
-    const affectedRows = await DbInterface.exec(query, [user.vrpId, user.characterId, user.id, accountId, level]);
+    const affectedRows = await DbInterface.exec(query, [
+      user.vrpId,
+      user.characterId,
+      user.id,
+      accountId,
+      level,
+    ]);
 
-    return (affectedRows > 0);
+    return affectedRows > 0;
   }
 
   async editAccountUser(vrpId: number, characterId: number, accountId: number, level: number) {
-    console.log(`[bleeter.database.ts] editAccountUser ${vrpId} ${characterId} ${accountId} ${level}`)
+    console.log(
+      `[bleeter.database.ts] editAccountUser ${vrpId} ${characterId} ${accountId} ${level}`,
+    );
 
     const query = `
       UPDATE npwd_bleeter_account_access
@@ -379,7 +460,7 @@ export class _BleeterDB {
 
     const affectedRows = await DbInterface.exec(query, [level, vrpId, characterId, accountId]);
 
-    return (affectedRows > 0);
+    return affectedRows > 0;
   }
 
   async fetchAccountUsers(accountId: number): Promise<BleeterAccount[]> {
@@ -403,7 +484,7 @@ export class _BleeterDB {
 
     let accounts = await DbInterface.fetch<BleeterAccount[]>(query, [accountId]);
 
-    if(!accounts) {
+    if (!accounts) {
       return [];
     }
 
