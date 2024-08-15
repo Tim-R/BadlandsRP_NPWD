@@ -153,6 +153,7 @@ class _BleeterService {
         return resp({ status: 'error', errorMsg: 'Unknown error while creating account' });
       }
 
+      console.log('createdAccount', createdAccount);
       resp({ status: 'ok', data: createdAccount });
     } catch(err) {
       resp({ status: 'error', errorMsg: err.message });
@@ -282,6 +283,21 @@ class _BleeterService {
     console.log(response);
 
     resp({ status: 'ok', data: response });
+  }
+
+  async handleCreateBleet (
+    reqObj: PromiseRequest<{ bleet: Bleet }>,
+    resp: PromiseEventResp<void>,
+  ) {
+
+    console.log(reqObj.data, '<------------------------------')
+    const success = await this.bleeterDB.addBleet(reqObj.data);
+
+    if(!success) {
+      return resp({ status: 'error', errorMsg: 'Unknown error' });
+    }
+
+    resp({ status: 'ok', data: success });
   }
 }
 

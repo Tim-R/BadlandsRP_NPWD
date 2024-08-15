@@ -30,13 +30,13 @@ export interface RepliesFetchResponse {
 }
 
 export interface Bleet {
-  id: number,
+  id?: number,
   accountId: number,
   characterId: number,
   repliedId?: number,
   rebleetedId?: number,
   baseAccountId?: number,
-  body: string,
+  body?: string,
   likes: number,
   images?: string,
   rebleets: number,
@@ -86,4 +86,5 @@ export enum BleeterEvents {
   FETCH_BLEETS_REPLY = 'npwd:fetchBleetsReply',
 
   DELETE_BLEET = 'npwd:deleteBleet',
+  ADD_BLEET = 'npwd:addBleet',
 }

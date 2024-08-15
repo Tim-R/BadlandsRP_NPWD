@@ -13,6 +13,7 @@ RegisterNuiProxy(BleeterEvents.ADD_ACCOUNT_USER);
 RegisterNuiProxy(BleeterEvents.EDIT_ACCOUNT_USER);
 RegisterNuiProxy(BleeterEvents.FETCH_BLEETS_HOME);
 RegisterNuiProxy(BleeterEvents.DELETE_BLEET);
+RegisterNuiProxy(BleeterEvents.ADD_BLEET);
 
 onNet(BleeterEvents.EDIT_ACCOUNT_BROADCAST, (data: { accountId: number, profileName: string, avatarUrl: string }) => {
   sendBleeterMessage(BleeterEvents.EDIT_ACCOUNT_BROADCAST, data);
