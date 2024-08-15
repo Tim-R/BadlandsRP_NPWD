@@ -1,7 +1,34 @@
-import { useMyAccountsValue, useCurrentAccount, useSetCurrentAccount, useSetAccounts } from '@apps/bleeter/hooks/state';
+import {
+  useMyAccountsValue,
+  useCurrentAccount,
+  useSetCurrentAccount,
+  useSetAccounts,
+} from '@apps/bleeter/hooks/state';
 import { MockBleeterAccountUsers } from '@apps/bleeter/utils/constants';
 import { Add, Edit, Person } from '@mui/icons-material';
-import { Avatar, Button, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, IconButton, InputLabel, List, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Radio, RadioGroup, Select, SelectChangeEvent, Typography } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  IconButton,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  Paper,
+  Radio,
+  RadioGroup,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from '@mui/material';
 import { useConfig } from '@os/phone/hooks';
 import usePlayerData from '@os/phone/hooks/usePlayerData';
 import { BleeterAccount, BleeterAccountLevel, BleeterEvents } from '@typings/bleeter';
@@ -22,9 +49,11 @@ export const Me: React.FC = () => {
   const { addAlert } = useSnackbar();
 
   const handleChange = (event: SelectChangeEvent) => {
-    let account = accounts.find((a: BleeterAccount) => a.id.toString() == (event.target.value as string));
+    let account = accounts.find(
+      (a: BleeterAccount) => a.id.toString() == (event.target.value as string),
+    );
 
-    if(!account) {
+    if (!account) {
       event.stopPropagation();
       event.preventDefault();
       return;
@@ -41,7 +70,7 @@ export const Me: React.FC = () => {
   const onChangeModalProfileName = (e: ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
 
-    if(text.length > config.bleeter.maxAccountNameLength) {
+    if (text.length > config.bleeter.maxAccountNameLength) {
       e.preventDefault();
       e.stopPropagation();
       return;
@@ -51,7 +80,8 @@ export const Me: React.FC = () => {
   };
 
   const [modalAvatarUrl, setModalAvatarUrl] = useState('');
-  const onChangeModalAvatarUrl = (e: ChangeEvent<HTMLInputElement>) => setModalAvatarUrl(e.target.value);
+  const onChangeModalAvatarUrl = (e: ChangeEvent<HTMLInputElement>) =>
+    setModalAvatarUrl(e.target.value);
 
   const [accountCharsRemaining, setAccountCharsRemaining] = useState(0);
 
@@ -61,14 +91,14 @@ export const Me: React.FC = () => {
 
   const openCreateModal = () => {
     setModalAccountOpen(true);
-  }
+  };
 
   const closeCreateModal = () => {
     setModalAccountOpen(false);
-  }
+  };
 
   const createAccount = async () => {
-    if(modalAccountWorking) {
+    if (modalAccountWorking) {
       return;
     }
 
@@ -77,10 +107,10 @@ export const Me: React.FC = () => {
     try {
       const resp = await fetchNui<ServerPromiseResp<BleeterAccount>>(BleeterEvents.CREATE_ACCOUNT, {
         profileName: modalProfileName,
-        avatarUrl: modalAvatarUrl
+        avatarUrl: modalAvatarUrl,
       });
 
-      if(resp.status == 'error') {
+      if (resp.status == 'error') {
         setModalAccountError(resp.errorMsg);
         setModalAccountWorking(false);
         return;
@@ -88,13 +118,13 @@ export const Me: React.FC = () => {
 
       let createdAccount = resp.data;
 
-      if(!createdAccount) {
+      if (!createdAccount) {
         setModalAccountError('Unknown error while creating account');
         setModalAccountWorking(false);
         return;
       }
 
-      setAccounts(accounts => [...accounts, createdAccount]);
+      setAccounts((accounts) => [...accounts, createdAccount]);
       setCurrentAccount(createdAccount);
     } catch {
       setModalAccountError('Unknown error occurred');
@@ -106,26 +136,35 @@ export const Me: React.FC = () => {
     setModalAvatarUrl('');
     setModalAccountOpen(false);
     setModalAccountWorking(false);
-  }
+  };
 
   const [processing, setProcessing] = useState(false);
-  const [accountProfileName, setAccountProfileName] = useState(currentAccount.profileName);
-  const [accountAvatarUrl, setAccountAvatarUrl] = useState(currentAccount.avatarUrl);
-  const onChangeAccountProfileName = (e: ChangeEvent<HTMLInputElement>) => setAccountProfileName(e.target.value);
-  const onChangeAccountAvatarUrl = (e: ChangeEvent<HTMLInputElement>) => setAccountAvatarUrl(e.target.value);
+  const [accountProfileName, setAccountProfileName] = useState(
+    currentAccount ? currentAccount.profileName : '',
+  );
+  const [accountAvatarUrl, setAccountAvatarUrl] = useState(
+    currentAccount ? currentAccount.avatarUrl : '',
+  );
+  const onChangeAccountProfileName = (e: ChangeEvent<HTMLInputElement>) =>
+    setAccountProfileName(e.target.value);
+  const onChangeAccountAvatarUrl = (e: ChangeEvent<HTMLInputElement>) =>
+    setAccountAvatarUrl(e.target.value);
 
   useEffect(() => {
+    if (!currentAccount) {
+      return;
+    }
     setProcessing(false);
     setAccountProfileName(currentAccount.profileName);
     setAccountAvatarUrl(currentAccount.avatarUrl);
   }, [currentAccount]);
 
   const updateAccount = async () => {
-    if(currentAccount.level < BleeterAccountLevel.LEVEL_ADMIN || processing) {
+    if (currentAccount.level < BleeterAccountLevel.LEVEL_ADMIN || processing) {
       return;
     }
 
-    if(
+    if (
       currentAccount.profileName == accountProfileName &&
       currentAccount.avatarUrl == accountAvatarUrl
     ) {
@@ -138,10 +177,10 @@ export const Me: React.FC = () => {
       const resp = await fetchNui<ServerPromiseResp<BleeterAccount>>(BleeterEvents.EDIT_ACCOUNT, {
         accountId: currentAccount.id,
         profileName: accountProfileName,
-        avatarUrl: accountAvatarUrl
+        avatarUrl: accountAvatarUrl,
       });
 
-      if(resp.status == 'error') {
+      if (resp.status == 'error') {
         addAlert({
           message: resp.errorMsg,
           type: 'error',
@@ -166,7 +205,7 @@ export const Me: React.FC = () => {
     });
 
     setProcessing(false);
-  }
+  };
 
   /* Users modal */
 
@@ -177,7 +216,7 @@ export const Me: React.FC = () => {
     profileName: '',
     level: 1,
     active: false,
-  }
+  };
 
   const [modalUsersError, setModalUsersError] = useState('');
   const [modalUsersMode, setModalUsersMode] = useState('');
@@ -186,8 +225,10 @@ export const Me: React.FC = () => {
   const [modalUsersUsers, setModalUsersUsers] = useState([]);
   const [modalUsersUsername, setModalUsersUsername] = useState('');
   const [modalUsersLevel, setModalUsersLevel] = useState(1);
-  const onChangeModalUsersUsername = (e: ChangeEvent<HTMLInputElement>) => setModalUsersUsername(e.target.value);
-  const onChangeModalUsersLevel = (e: ChangeEvent<HTMLInputElement>) => setModalUsersLevel(Number((e.target as HTMLInputElement).value));
+  const onChangeModalUsersUsername = (e: ChangeEvent<HTMLInputElement>) =>
+    setModalUsersUsername(e.target.value);
+  const onChangeModalUsersLevel = (e: ChangeEvent<HTMLInputElement>) =>
+    setModalUsersLevel(Number((e.target as HTMLInputElement).value));
 
   const getAccountUsers = async () => {
     try {
@@ -201,12 +242,12 @@ export const Me: React.FC = () => {
     } catch (e) {
       setModalUsersError('Error fetching users');
     }
-  }
+  };
 
   const openUsersModal = () => {
     getAccountUsers();
     setModalUsersOpen(true);
-  }
+  };
 
   const closeUsersModal = () => {
     setModalUsersOpen(false);
@@ -216,19 +257,19 @@ export const Me: React.FC = () => {
     setModalUsersUsername('');
     setModalUsersLevel(1);
     setModalUsersUsers([]);
-  }
+  };
 
   const addUser = () => {
     setModalUsersUser(defaultUser);
     setModalUsersMode('add');
-  }
+  };
 
   const editUser = (user: any) => {
-    setModalUsersUser(user)
+    setModalUsersUser(user);
     setModalUsersUsername(user.profileName);
     setModalUsersLevel(user.level);
     setModalUsersMode('edit');
-  }
+  };
 
   const removeUser = async () => {
     try {
@@ -238,44 +279,50 @@ export const Me: React.FC = () => {
         buildRespObj(true),
       );
 
-      if(resp.status == 'error') {
+      if (resp.status == 'error') {
         setModalUsersError(resp.errorMsg);
         return;
       }
 
-      setModalUsersUsers([...modalUsersUsers].filter(user => user.characterId != modalUsersUser.characterId));
+      setModalUsersUsers(
+        [...modalUsersUsers].filter((user) => user.characterId != modalUsersUser.characterId),
+      );
       setModalUsersMode('');
       setModalUsersUser(defaultUser);
     } catch (e) {
       setModalUsersError('Error deleting user');
     }
-  }
+  };
 
   const submitUser = async () => {
     try {
       let resp = null;
 
-      if(modalUsersMode == 'add') {
+      if (modalUsersMode == 'add') {
         resp = await fetchNui<ServerPromiseResp<boolean>>(
           BleeterEvents.ADD_ACCOUNT_USER,
           { accountId: currentAccount.id, profileName: modalUsersUsername, level: modalUsersLevel },
           buildRespObj(true),
         );
-      } else if(modalUsersMode == 'edit') {
+      } else if (modalUsersMode == 'edit') {
         resp = await fetchNui<ServerPromiseResp<boolean>>(
           BleeterEvents.EDIT_ACCOUNT_USER,
-          { vrpId: modalUsersUser.vrpId, characterId: modalUsersUser.characterId, accountId: currentAccount.id, level: modalUsersLevel },
+          {
+            vrpId: modalUsersUser.vrpId,
+            characterId: modalUsersUser.characterId,
+            accountId: currentAccount.id,
+            level: modalUsersLevel,
+          },
           buildRespObj(true),
         );
       }
 
-      if(!resp || resp.status == 'error') {
+      if (!resp || resp.status == 'error') {
         setModalUsersError(resp.errorMsg);
         return;
       }
-
     } catch (e) {
-      setModalUsersError(`Error ${modalUsersMode == 'add' ? 'adding' : 'editing' } user`);
+      setModalUsersError(`Error ${modalUsersMode == 'add' ? 'adding' : 'editing'} user`);
       return;
     }
 
@@ -283,12 +330,12 @@ export const Me: React.FC = () => {
     setModalUsersMode('');
     setModalUsersUsername('');
     setModalUsersUser(defaultUser);
-  }
+  };
 
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const deleteAccount = async () => {
-    if(!confirmDelete) {
+    if (!confirmDelete) {
       setConfirmDelete(true);
       return;
     }
@@ -298,7 +345,7 @@ export const Me: React.FC = () => {
         accountId: currentAccount.id,
       });
 
-      if(resp.status == 'error') {
+      if (resp.status == 'error') {
         addAlert({
           message: resp.errorMsg,
           type: 'error',
@@ -323,15 +370,15 @@ export const Me: React.FC = () => {
     });
 
     setConfirmDelete(false);
-  }
+  };
 
   const cancelDelete = () => {
     setConfirmDelete(false);
-  }
+  };
 
   return (
-    <div className="flex flex-col items-stretch grow">
-      { /* Account select dropdown and create button */ }
+    <div className="flex grow flex-col items-stretch">
+      {/* Account select dropdown and create button */}
       <Grid container spacing={1}>
         <Grid item xs={10}>
           <FormControl fullWidth size="small">
@@ -346,34 +393,49 @@ export const Me: React.FC = () => {
             >
               {[...accounts]
                 .sort((a, b) => {
-                  return a.profileName.toLowerCase().localeCompare(b.profileName.toLocaleLowerCase());
+                  return a.profileName
+                    .toLowerCase()
+                    .localeCompare(b.profileName.toLocaleLowerCase());
                 })
                 .map((account) => {
-                  return <MenuItem value={account.id.toString()} selected={account.active}>{ account.profileName }</MenuItem>
-                })
-              }
-              { accounts.length == 0 &&
-                <MenuItem value="-1" disabled>No access to any accounts</MenuItem>
-              }
+                  return (
+                    <MenuItem value={account.id.toString()} selected={account.active}>
+                      {account.profileName}
+                    </MenuItem>
+                  );
+                })}
+              {accounts.length == 0 && (
+                <MenuItem value="-1" disabled>
+                  No access to any accounts
+                </MenuItem>
+              )}
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={1}>
-          <Button fullWidth variant="outlined" color="primary" sx={{ height: '100%' }} onClick={openCreateModal}><Add /></Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            color="primary"
+            sx={{ height: '100%' }}
+            onClick={openCreateModal}
+          >
+            <Add />
+          </Button>
         </Grid>
       </Grid>
 
       <Divider />
 
-      { !currentAccount &&
-        <div className="flex flex-col grow items-center justify-center">
+      {!currentAccount && (
+        <div className="flex grow flex-col items-center justify-center">
           <Typography variant="h6">No account selected</Typography>
         </div>
-      }
+      )}
 
-      { /* Account settings */ }
-      { currentAccount &&
-        <div className="flex flex-col grow pt-4">
+      {/* Account settings */}
+      {currentAccount && (
+        <div className="flex grow flex-col pt-4">
           <div>
             <img
               src={currentAccount.avatarUrl}
@@ -388,7 +450,7 @@ export const Me: React.FC = () => {
               value={accountProfileName}
               onChange={onChangeAccountProfileName}
               className="focus:ring-2 focus:ring-blue-500"
-              readOnly={ currentAccount.characterId != playerData.id }
+              readOnly={currentAccount.characterId != playerData.id}
             />
           </div>
 
@@ -398,44 +460,74 @@ export const Me: React.FC = () => {
               value={accountAvatarUrl}
               onChange={onChangeAccountAvatarUrl}
               className="focus:ring-2 focus:ring-blue-500"
-              readOnly={ currentAccount.characterId != playerData.id }
+              readOnly={currentAccount.characterId != playerData.id}
             />
           </div>
 
-          { (currentAccount.level >= BleeterAccountLevel.LEVEL_ADMIN) &&
+          {currentAccount.level >= BleeterAccountLevel.LEVEL_ADMIN && (
             <div className="mt-4">
-              <Button onClick={openUsersModal} variant="outlined" className="w-full" color="info">Edit Users</Button>
+              <Button onClick={openUsersModal} variant="outlined" className="w-full" color="info">
+                Edit Users
+              </Button>
             </div>
-          }
+          )}
 
-          { (currentAccount.level >= BleeterAccountLevel.LEVEL_ADMIN && currentAccount.characterId == playerData.id) &&
-            <div className="mt-4">
-              <Button onClick={updateAccount} variant="outlined" className="w-full" color="primary">Update</Button>
-            </div>
-          }
+          {currentAccount.level >= BleeterAccountLevel.LEVEL_ADMIN &&
+            currentAccount.characterId == playerData.id && (
+              <div className="mt-4">
+                <Button
+                  onClick={updateAccount}
+                  variant="outlined"
+                  className="w-full"
+                  color="primary"
+                >
+                  Update
+                </Button>
+              </div>
+            )}
 
-          { (currentAccount.level >= BleeterAccountLevel.LEVEL_ADMIN && currentAccount.characterId == playerData.id && !confirmDelete) &&
-            <div className="mt-4">
-              <Button onClick={deleteAccount} variant="outlined" className="w-full" color="error">Delete Account</Button>
-            </div>
-          }
+          {currentAccount.level >= BleeterAccountLevel.LEVEL_ADMIN &&
+            currentAccount.characterId == playerData.id &&
+            !confirmDelete && (
+              <div className="mt-4">
+                <Button onClick={deleteAccount} variant="outlined" className="w-full" color="error">
+                  Delete Account
+                </Button>
+              </div>
+            )}
 
-          { (currentAccount.level >= BleeterAccountLevel.LEVEL_ADMIN && currentAccount.characterId == playerData.id && confirmDelete) &&
-            <div className="mt-4">
-              <Grid container spacing={1}>
-                <Grid item xs={6}>
-                  <Button onClick={cancelDelete} variant="outlined" className="w-full" color="info">Go back</Button>
+          {currentAccount.level >= BleeterAccountLevel.LEVEL_ADMIN &&
+            currentAccount.characterId == playerData.id &&
+            confirmDelete && (
+              <div className="mt-4">
+                <Grid container spacing={1}>
+                  <Grid item xs={6}>
+                    <Button
+                      onClick={cancelDelete}
+                      variant="outlined"
+                      className="w-full"
+                      color="info"
+                    >
+                      Go back
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      onClick={deleteAccount}
+                      variant="outlined"
+                      className="w-full"
+                      color="error"
+                    >
+                      Confirm delete
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                  <Button onClick={deleteAccount} variant="outlined" className="w-full" color="error">Confirm delete</Button>
-                </Grid>
-              </Grid>
-            </div>
-          }
+              </div>
+            )}
         </div>
-      }
+      )}
 
-      { /* Create account modal */ }
+      {/* Create account modal */}
       <Modal2 visible={modalAccountOpen} handleClose={() => {}}>
         <Typography sx={{ mb: 2 }}>Create Bleeter Account</Typography>
 
@@ -458,9 +550,9 @@ export const Me: React.FC = () => {
           />
         </FormControl>
 
-        { modalAccountError?.length > 0 &&
+        {modalAccountError?.length > 0 && (
           <Typography color="#EB5B5B">{modalAccountError}</Typography>
-        }
+        )}
 
         <Grid container justifyContent="flex-end">
           <Button onClick={closeCreateModal}>Close</Button>
@@ -477,7 +569,7 @@ export const Me: React.FC = () => {
         </Grid>
       </Modal2>
 
-      { /* Edit users modal */ }
+      {/* Edit users modal */}
       <Modal2 visible={modalUsersOpen} handleClose={() => {}}>
         <List dense={true} sx={{ maxHeight: '350px', overflowY: 'scroll' }}>
           <ListItem
@@ -492,38 +584,37 @@ export const Me: React.FC = () => {
                 <Person />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText
-              primary={'Add User'}
-            />
+            <ListItemText primary={'Add User'} />
           </ListItem>
 
-          {modalUsersUsers.sort((a, b) => b.level - a.level).map(user => {
-            return (
-            <ListItem
-              secondaryAction={
-                <IconButton edge="end" onClick={() => editUser(user)}>
-                  <Edit />
-                </IconButton>
-              }
-            >
-              <ListItemAvatar>
-                <Avatar>
-                  <img
-                    src={user.avatarUrl}
-                    alt={'avatar'}
+          {modalUsersUsers
+            .sort((a, b) => b.level - a.level)
+            .map((user) => {
+              return (
+                <ListItem
+                  secondaryAction={
+                    <IconButton edge="end" onClick={() => editUser(user)}>
+                      <Edit />
+                    </IconButton>
+                  }
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <img src={user.avatarUrl} alt={'avatar'} />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`@${user.profileName}`}
+                    secondary={
+                      user.level == BleeterAccountLevel.LEVEL_MEMBER ? 'Member' : 'Administrator'
+                    }
                   />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={`@${user.profileName}`}
-                secondary={user.level == BleeterAccountLevel.LEVEL_MEMBER ? 'Member' : 'Administrator'}
-              />
-            </ListItem>
-            )
-          })}
+                </ListItem>
+              );
+            })}
         </List>
 
-        { modalUsersMode != "" &&
+        {modalUsersMode != '' && (
           <div className="mt-4">
             <FormControl fullWidth sx={{ mb: 2 }}>
               <TextField
@@ -549,36 +640,24 @@ export const Me: React.FC = () => {
               </RadioGroup>
             </FormControl>
           </div>
-        }
+        )}
 
-        { modalUsersError?.length > 0 &&
-          <Typography color="#EB5B5B">{modalUsersError}</Typography>
-        }
+        {modalUsersError?.length > 0 && <Typography color="#EB5B5B">{modalUsersError}</Typography>}
 
         <Grid container justifyContent="flex-end">
           <Button onClick={closeUsersModal}>Close</Button>
 
-          { modalUsersMode == 'edit' &&
-            <Button
-              onClick={removeUser}
-              variant="outlined"
-              color="error"
-              sx={{ ml: 2 }}
-            >
+          {modalUsersMode == 'edit' && (
+            <Button onClick={removeUser} variant="outlined" color="error" sx={{ ml: 2 }}>
               Remove
             </Button>
-          }
+          )}
 
-          { modalUsersMode != '' &&
-            <Button
-              onClick={submitUser}
-              variant="outlined"
-              color="success"
-              sx={{ ml: 2 }}
-            >
-              { modalUsersMode == 'edit' ? 'Edit' : 'Add' }
+          {modalUsersMode != '' && (
+            <Button onClick={submitUser} variant="outlined" color="success" sx={{ ml: 2 }}>
+              {modalUsersMode == 'edit' ? 'Edit' : 'Add'}
             </Button>
-          }
+          )}
         </Grid>
       </Modal2>
     </div>
