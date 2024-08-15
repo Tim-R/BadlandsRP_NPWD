@@ -18,7 +18,7 @@ export const BleetItem: React.FC<BleeterProps> = ({ bleet, deleteBleet }) => {
   const account = accounts.find(account => account.id == bleet.accountId);
   const accountBase = bleet.baseAccountId ? accounts.find(account => account.id == bleet.baseAccountId) : null;
 
-  const canAccess = account.level && account.level >= 1;
+  const canAccess = account && account.level && account.level >= 1;
   const isSupportStaff = useIsSupportStaffOrGreater();
   const isModerator = useIsModeratorOrGreater();
 
