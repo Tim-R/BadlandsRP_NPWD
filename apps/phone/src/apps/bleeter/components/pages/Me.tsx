@@ -3,6 +3,7 @@ import {
   useCurrentAccount,
   useSetCurrentAccount,
   useSetAccounts,
+  useAccountsValue,
 } from '@apps/bleeter/hooks/state';
 import { MockBleeterAccountUsers } from '@apps/bleeter/utils/constants';
 import { Add, Edit, Person } from '@mui/icons-material';
@@ -42,23 +43,33 @@ import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 export const Me: React.FC = () => {
   const playerData = usePlayerData();
   const config = useConfig();
-  const accounts = useMyAccountsValue();
-  const currentAccount = useCurrentAccount();
+
+  const accounts = useAccountsValue();
   const setAccounts = useSetAccounts();
   const setCurrentAccount = useSetCurrentAccount();
+  const currentAccount = useCurrentAccount();
+  
+
   const { addAlert } = useSnackbar();
+
+  useEffect(() => {
+    console.log("Current account changed:", currentAccount.profileName);
+  }, [currentAccount]);
+
 
   const handleChange = (event: SelectChangeEvent) => {
     let account = accounts.find(
       (a: BleeterAccount) => a.id.toString() == (event.target.value as string),
     );
 
+
     if (!account) {
       event.stopPropagation();
       event.preventDefault();
       return;
     }
-
+    
+    console.log(account.profileName, '<---account FOR SELECTOR')
     setCurrentAccount(account);
   };
 
@@ -66,7 +77,7 @@ export const Me: React.FC = () => {
   const [modalAccountError, setModalAccountError] = useState('');
   const [modalAccountWorking, setModalAccountWorking] = useState(false);
 
-  const [modalProfileName, setModalProfileName] = useState('');
+  const [modalProfileName, setModalProfileName] = useState(''); 
   const onChangeModalProfileName = (e: ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
 
@@ -84,6 +95,19 @@ export const Me: React.FC = () => {
     setModalAvatarUrl(e.target.value);
 
   const [accountCharsRemaining, setAccountCharsRemaining] = useState(0);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const resp = await fetchNui<ServerPromiseResp<BleeterAccount[]>>(BleeterEvents.FETCH_MY_ACCOUNTS, {});
+        setAccounts(resp.data)
+      } catch (error) {
+        console.error('Failed to fetch accounts:', error);
+      }
+    };
+  
+    fetchAccounts();
+  }, []);
 
   useEffect(() => {
     setAccountCharsRemaining(config.bleeter.maxAccountNameLength - modalProfileName.length);
@@ -142,6 +166,7 @@ export const Me: React.FC = () => {
   const [accountProfileName, setAccountProfileName] = useState(
     currentAccount ? currentAccount.profileName : '',
   );
+  
   const [accountAvatarUrl, setAccountAvatarUrl] = useState(
     currentAccount ? currentAccount.avatarUrl : '',
   );
@@ -391,7 +416,8 @@ export const Me: React.FC = () => {
               onChange={handleChange}
               size="small"
             >
-              {[...accounts]
+              {
+              [...accounts]
                 .sort((a, b) => {
                   return a.profileName
                     .toLowerCase()
@@ -399,7 +425,7 @@ export const Me: React.FC = () => {
                 })
                 .map((account) => {
                   return (
-                    <MenuItem value={account.id.toString()} selected={account.active}>
+                    <MenuItem key={account.id} value={account.id.toString()} selected={account.active}>
                       {account.profileName}
                     </MenuItem>
                   );

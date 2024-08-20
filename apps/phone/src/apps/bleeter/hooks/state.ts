@@ -64,7 +64,6 @@ const myAccounts = selector<BleeterAccount[]>({
   get: ({ get }) => {
     let accounts = get(bleeterState.accounts);
     let playerData = get(phoneState.playerData);
-
     return accounts.filter(account => account.vrpId == playerData.vrp);
   }
 });
@@ -77,11 +76,14 @@ const currentAccount = selector<BleeterAccount>({
     let accounts = get(bleeterState.accounts);
     let playerData = get(phoneState.playerData);
 
-    let active = accounts.find((a: BleeterAccount) => a.vrpId == playerData.vrp && a.active);
+    console.log( 'ACCOUNTS', accounts, 'Player data', playerData);
+    let active = accounts.find((a: BleeterAccount) => a.characterId == playerData.id && a.active);
 
     if(active) {
+      console.log('Found active account', active);
       return active;
     }
+
 
     if(accounts.length > 0) {
       return [...accounts].sort((a: BleeterAccount, b: BleeterAccount) => a.profileName.localeCompare(b.profileName))[0];

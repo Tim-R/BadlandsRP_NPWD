@@ -39,7 +39,7 @@ export interface Bleet {
   body?: string,
   likes: number,
   images?: string,
-  rebleets: number,
+  rebleets?: number,
   createdAt: number,
 
   /* From account relation */

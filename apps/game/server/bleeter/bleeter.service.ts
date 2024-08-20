@@ -22,8 +22,7 @@ class _BleeterService {
   ) {
     const response = await this.bleeterDB.fetchBleetsHome(reqObj.data.vrpId, reqObj.data?.excludedAccountIds, reqObj.data?.from);
 
-    console.log('handleFetchBleets response');
-    console.log(response);
+  
 
     resp({ status: 'ok', data: response });
   }
@@ -153,7 +152,6 @@ class _BleeterService {
         return resp({ status: 'error', errorMsg: 'Unknown error while creating account' });
       }
 
-      console.log('createdAccount', createdAccount);
       resp({ status: 'ok', data: createdAccount });
     } catch(err) {
       resp({ status: 'error', errorMsg: err.message });
@@ -287,10 +285,10 @@ class _BleeterService {
 
   async handleCreateBleet (
     reqObj: PromiseRequest<{ bleet: Bleet }>,
-    resp: PromiseEventResp<void>,
+    resp: PromiseEventResp<Bleet[]>,
   ) {
 
-    console.log(reqObj.data, '<------------------------------')
+   
     const success = await this.bleeterDB.addBleet(reqObj.data);
 
     if(!success) {

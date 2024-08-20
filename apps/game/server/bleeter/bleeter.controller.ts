@@ -126,7 +126,6 @@ onNetPromise<{ vrpId: number, repliedId: number }, RepliesFetchResponse>(
 onNetPromise<{ bleet: Bleet }, boolean>(
   BleeterEvents.ADD_BLEET,
   async (reqObj, resp) => {
-    console.log('Bleet content:', reqObj);
     BleeterService.handleCreateBleet(reqObj, resp).catch((e) => {
       mainLogger.error(`Error occurred in add Bleet (${reqObj.source}), Error: ${e.message}`);
       resp({ status: 'error', errorMsg: 'INTERNAL_ERROR' });

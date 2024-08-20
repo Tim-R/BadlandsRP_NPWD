@@ -13,8 +13,8 @@ import {
 import React from 'react';
 import fetchNui from '@utils/fetchNui';
 import { ServerPromiseResp } from '@typings/common';
-import { BleeterEvents, BleetsFetchResponse } from '@typings/bleeter';
-import { useCurrentAccount } from '@apps/bleeter/hooks/state';
+import { Bleet, BleeterEvents, BleetsFetchResponse } from '@typings/bleeter';
+import { useBleetsValue, useCurrentAccount, useSetBleets } from '@apps/bleeter/hooks/state';
 
 export const CreateBleetForm: React.FC = () => {
   const [open, setOpen] = React.useState(false);
@@ -25,6 +25,8 @@ export const CreateBleetForm: React.FC = () => {
   const [buttonText, setButtonText] = React.useState('');
   const [severity, setSeverity] = React.useState('success');
   const [loading, setLoading] = React.useState(false);
+  const bleets = useBleetsValue();
+  const setBleets = useSetBleets();
   const currentAccount = useCurrentAccount();
 
 
@@ -73,13 +75,13 @@ export const CreateBleetForm: React.FC = () => {
       try {
         console.log('Sending bleet to server');
         console.log('Current account id/charId:', currentAccount.id, currentAccount.characterId);
-        const resp = await fetchNui<ServerPromiseResp<void>>(BleeterEvents.ADD_BLEET, {
+        const resp = await fetchNui<ServerPromiseResp<any>>(BleeterEvents.ADD_BLEET, {
           body: text,
           accountId: currentAccount.id,
           characterId: currentAccount.characterId,
           likes: 0,
         }).then((resp) => {
-          console.log('Bleet posted:', resp);
+          setBleets([resp.data[0], ...bleets]);
           alertButton('success', 'Bleet posted!');
           setLoading(false);
         });

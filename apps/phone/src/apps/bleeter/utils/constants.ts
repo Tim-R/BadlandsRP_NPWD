@@ -1,17 +1,15 @@
-import { Bleet, BleeterAccount, BleeterAccountLevel, BleetsFetchResponse } from "@typings/bleeter";
+import { Bleet, BleeterAccount, BleeterAccountLevel, BleetsFetchResponse } from '@typings/bleeter';
 
 export const APP_BLEETER = 'BLEETER';
 
-export const MockBleeterLikes: number[] = [
-
-];
+export const MockBleeterLikes: number[] = [];
 
 export const MockBleeterBleetsReplies: Bleet[] = [
   {
     id: 8,
     accountId: 0,
     characterId: 9102,
-    body: "reply to a bleet",
+    body: 'reply to a bleet',
     likes: 5,
     rebleets: 0,
     createdAt: 1712516778,
@@ -21,21 +19,20 @@ export const MockBleeterBleetsReplies: Bleet[] = [
     id: 9,
     accountId: 1,
     characterId: 9102,
-    body: "another reply to a bleet",
+    body: 'another reply to a bleet',
     likes: 3,
     rebleets: 0,
     createdAt: 1712518779,
     repliedId: 1,
   },
-
-]
+];
 
 export const MockBleeterBleets: Bleet[] = [
   {
     id: 1,
     accountId: 0,
     characterId: 9102,
-    body: "I am account id 0",
+    body: 'I am account id 0',
     likes: 5,
     rebleets: 0,
     createdAt: 1712516778,
@@ -44,7 +41,7 @@ export const MockBleeterBleets: Bleet[] = [
     id: 2,
     accountId: 1,
     characterId: 9102,
-    body: "The San Andreas Highway Patrol thanks all citizens for their safe driving!",
+    body: 'The San Andreas Highway Patrol thanks all citizens for their safe driving!',
     likes: 3,
     rebleets: 0,
     createdAt: 1712518779,
@@ -53,7 +50,7 @@ export const MockBleeterBleets: Bleet[] = [
     id: 3,
     accountId: 1,
     characterId: 9102,
-    body: "The San Andreas Highway Patrol thanks all citizens for their safe driving!",
+    body: 'The San Andreas Highway Patrol thanks all citizens for their safe driving!',
     likes: 4,
     rebleets: 0,
     createdAt: 1716724495,
@@ -62,7 +59,7 @@ export const MockBleeterBleets: Bleet[] = [
     id: 4,
     accountId: 2,
     characterId: 9102,
-    body: "I am account id 2",
+    body: 'I am account id 2',
     likes: 0,
     rebleets: 0,
     createdAt: 1712516781,
@@ -71,11 +68,246 @@ export const MockBleeterBleets: Bleet[] = [
     id: 5,
     accountId: 3,
     characterId: 9102,
-    body: "I am account id 3",
+    body: 'I am account id 3',
     likes: 2,
     rebleets: 0,
     createdAt: 1712516782,
   },
+//   {
+//     id: 6,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 4",
+//     likes: 1,
+//     rebleets: 0,
+//     createdAt: 1712516783,
+// },
+// {
+//     id: 7,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Drive safe and keep the roads clear!",
+//     likes: 6,
+//     rebleets: 1,
+//     createdAt: 1712518780,
+// },
+// {
+//     id: 8,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 6",
+//     likes: 0,
+//     rebleets: 0,
+//     createdAt: 1712516784,
+// },
+// {
+//     id: 9,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "The traffic this morning was heavy but manageable.",
+//     likes: 5,
+//     rebleets: 2,
+//     createdAt: 1712518781,
+// },
+// {
+//     id: 10,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 8",
+//     likes: 3,
+//     rebleets: 0,
+//     createdAt: 1712516785,
+// },
+// {
+//     id: 11,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Drive safe everyone!",
+//     likes: 4,
+//     rebleets: 1,
+//     createdAt: 1712518782,
+// },
+// {
+//     id: 12,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 10",
+//     likes: 2,
+//     rebleets: 0,
+//     createdAt: 1712516786,
+// },
+// {
+//     id: 13,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Safe driving is everyone's responsibility.",
+//     likes: 6,
+//     rebleets: 3,
+//     createdAt: 1712518783,
+// },
+// {
+//     id: 14,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 12",
+//     likes: 1,
+//     rebleets: 0,
+//     createdAt: 1712516787,
+// },
+// {
+//     id: 15,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "The San Andreas Highway Patrol urges caution during this busy holiday season.",
+//     likes: 7,
+//     rebleets: 2,
+//     createdAt: 1712518784,
+// },
+// {
+//     id: 16,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 14",
+//     likes: 3,
+//     rebleets: 0,
+//     createdAt: 1712516788,
+// },
+// {
+//     id: 17,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Watch out for icy roads!",
+//     likes: 5,
+//     rebleets: 1,
+//     createdAt: 1712518785,
+// },
+// {
+//     id: 18,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 16",
+//     likes: 0,
+//     rebleets: 0,
+//     createdAt: 1712516789,
+// },
+// {
+//     id: 19,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Slow down, speed limits are there for your safety.",
+//     likes: 4,
+//     rebleets: 1,
+//     createdAt: 1712518786,
+// },
+// {
+//     id: 20,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 18",
+//     likes: 2,
+//     rebleets: 0,
+//     createdAt: 1712516790,
+// },
+// {
+//     id: 21,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Road construction ahead, expect delays.",
+//     likes: 3,
+//     rebleets: 0,
+//     createdAt: 1712518787,
+// },
+// {
+//     id: 22,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 20",
+//     likes: 1,
+//     rebleets: 0,
+//     createdAt: 1712516791,
+// },
+// {
+//     id: 23,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Remember to buckle up!",
+//     likes: 6,
+//     rebleets: 2,
+//     createdAt: 1712518788,
+// },
+// {
+//     id: 24,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 22",
+//     likes: 4,
+//     rebleets: 0,
+//     createdAt: 1712516792,
+// },
+// {
+//     id: 25,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Heavy rain is expected, drive with caution.",
+//     likes: 7,
+//     rebleets: 3,
+//     createdAt: 1712518789,
+// },
+// {
+//     id: 26,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 24",
+//     likes: 3,
+//     rebleets: 0,
+//     createdAt: 1712516793,
+// },
+// {
+//     id: 27,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Keep your headlights on during foggy conditions.",
+//     likes: 5,
+//     rebleets: 1,
+//     createdAt: 1712518790,
+// },
+// {
+//     id: 28,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 26",
+//     likes: 0,
+//     rebleets: 0,
+//     createdAt: 1712516794,
+// },
+// {
+//     id: 29,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "Avoid distractions while driving, stay focused on the road.",
+//     likes: 6,
+//     rebleets: 2,
+//     createdAt: 1712518791,
+// },
+// {
+//     id: 30,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "I am account id 28",
+//     likes: 2,
+//     rebleets: 0,
+//     createdAt: 1712516795,
+// },
+// {
+//     id: 31,
+//     accountId: 1,
+//     characterId: 9102,
+//     body: "The San Andreas Highway Patrol thanks you for driving safe!",
+//     likes: 5,
+//     rebleets: 1,
+//     createdAt: 1712518792,
+// }
+
 
   /*
   const BLEET_SELECT_FIELDS = `
@@ -141,7 +373,7 @@ export const MockBleeterHome: BleetsFetchResponse = {
   bleets: MockBleeterBleets,
   accounts: MockBleeterAccounts,
   hasMore: false,
-}
+};
 
 export const MockBleeterAccountUsers: BleeterAccount[] = [
   {
@@ -150,7 +382,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 3,
     profileName: 'Test User 3',
     avatarUrl: 'https://i.pravatar.cc/150?u=3',
-    level: BleeterAccountLevel.LEVEL_ADMIN
+    level: BleeterAccountLevel.LEVEL_ADMIN,
   },
   {
     id: 4,
@@ -158,7 +390,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 4,
     profileName: 'Test User 4',
     avatarUrl: 'https://i.pravatar.cc/150?u=4',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 5,
@@ -166,7 +398,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 5,
     profileName: 'Test User 5',
     avatarUrl: 'https://i.pravatar.cc/150?u=5',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 6,
@@ -174,7 +406,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 6,
     profileName: 'Test User 6',
     avatarUrl: 'https://i.pravatar.cc/150?u=6',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 7,
@@ -182,7 +414,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 7,
     profileName: 'Test User 7',
     avatarUrl: 'https://i.pravatar.cc/150?u=7',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 8,
@@ -190,7 +422,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 8,
     profileName: 'Test User 8',
     avatarUrl: 'https://i.pravatar.cc/150?u=8',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 9,
@@ -198,7 +430,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 9,
     profileName: 'Test User 9',
     avatarUrl: 'https://i.pravatar.cc/150?u=9',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 10,
@@ -206,7 +438,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 10,
     profileName: 'Test User 10',
     avatarUrl: 'https://i.pravatar.cc/150?u=10',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 11,
@@ -214,7 +446,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 11,
     profileName: 'Test User 11',
     avatarUrl: 'https://i.pravatar.cc/150?u=11',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 12,
@@ -222,7 +454,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 12,
     profileName: 'Test User 12',
     avatarUrl: 'https://i.pravatar.cc/150?u=12',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 13,
@@ -230,7 +462,7 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 13,
     profileName: 'Test User 13',
     avatarUrl: 'https://i.pravatar.cc/150?u=13',
-    level: BleeterAccountLevel.LEVEL_MEMBER
+    level: BleeterAccountLevel.LEVEL_MEMBER,
   },
   {
     id: 14,
@@ -238,6 +470,6 @@ export const MockBleeterAccountUsers: BleeterAccount[] = [
     characterId: 14,
     profileName: 'Test User 14',
     avatarUrl: 'https://i.pravatar.cc/150?u=14',
-    level: BleeterAccountLevel.LEVEL_ADMIN
+    level: BleeterAccountLevel.LEVEL_ADMIN,
   },
 ];

@@ -31,10 +31,6 @@ export class _BleeterDB {
     this.bleetsPerPage = config?.bleeter?.resultsPerPage || 25;
   }
 
-  async fetchBleet(bleetId: number): Promise<Bleet> {
-    return null; // TODO: function stub
-  }
-
   async fetchReplies(vrpId: number, repliedId: number): Promise<RepliesFetchResponse> {
     let query = `
       SELECT *
@@ -78,7 +74,6 @@ export class _BleeterDB {
   */
 
   async addBleet(bleet: any) {
-    console.log(bleet, '<----------------------------------');
     const columns = [];
     const placeholders = [];
     const values = [];
@@ -115,11 +110,18 @@ export class _BleeterDB {
       (${placeholders.join(', ')})
   `;
 
-    console.log(query);
 
-    const affectedRows = await DbInterface.exec(query, values);
+    const insertId = await DbInterface.insert(query, values);
 
-    return affectedRows > 0;
+    if (insertId) {
+      const bleetQuery = `
+          SELECT ${BLEET_SELECT_FIELDS} FROM npwd_bleeter_bleets WHERE id = ?
+        `;
+        const bleet = await DbInterface.fetch(bleetQuery, [insertId]);
+        return bleet;
+    } else {
+        return null;
+    }
   }
 
   async fetchBleetsHome(
@@ -151,8 +153,7 @@ export class _BleeterDB {
 
       bindings = [from, this.bleetsPerPage];
     }
-    console.log(query, '<---------------------------------- first query');
-    console.log(bindings, '<---------------------------------- first bindings');
+    
 
     const bleets = await DbInterface.fetch<Bleet[]>(query, bindings);
 
@@ -200,7 +201,7 @@ export class _BleeterDB {
       `;
     }
 
-    console.log(queryAccounts, '<----------------------------------');
+    
 
     const accounts = await DbInterface.fetch<BleeterAccount[]>(queryAccounts);
 
@@ -302,7 +303,6 @@ export class _BleeterDB {
     `;
 
     let accounts = await DbInterface.fetch<BleeterAccount[]>(query, [value]);
-
     if (!accounts) {
       return [];
     }
@@ -312,7 +312,6 @@ export class _BleeterDB {
 
   async fetchAccount(column: string, value: any): Promise<BleeterAccount> {
     const accounts = await this.fetchAccounts(column, value);
-
     if (!accounts || accounts.length == 0) {
       return null;
     }
