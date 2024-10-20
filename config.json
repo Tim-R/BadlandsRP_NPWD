@@ -100,8 +100,8 @@
   "disabledApps": [
     "BROWSER",
     "MATCH",
-    "DARKCHAT",
-    "TWITTER"
+    "DARKCHAT"
+    
   ],
   "apps": [
     "npwd_banking",
@@ -127,7 +127,9 @@
   "bleeter": {
     "resultsPerPage": 25,
     "maxAccountNameLength": 40,
-    "maxAccountsPerPlayer": 6
+    "maxAccountsPerPlayer": 6,
+    "characterLimit": 200,
+    "newLineLimit": 10
   },
   "online": {
 

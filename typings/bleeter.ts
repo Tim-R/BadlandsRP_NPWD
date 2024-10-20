@@ -2,6 +2,8 @@ export interface BleeterConfig {
   resultsPerPage: number;
   maxAccountNameLength: number;
   maxAccountsPerPlayer: number;
+  characterLimit: number;
+  newLineLimit: number;
   /*
     showNotifications: boolean;
     generateProfileNameFromUsers: boolean;

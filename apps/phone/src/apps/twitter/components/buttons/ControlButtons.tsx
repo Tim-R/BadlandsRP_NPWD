@@ -10,7 +10,7 @@ export const ControlButtons = ({ showImagePrompt, showEmoji, onCloseClick, onPri
 
   return (
     <div className="flex flex-row items-center justify-end space-x-2">
-      <NPWDButton variant="primary" size="sm" onClick={onPrimaryClick} className="bg-sky-500">
+      <NPWDButton variant="primary" size="sm" onClick={onPrimaryClick} className="bg-green-500">
         {primaryButtonText}
       </NPWDButton>
       {showCloseButton && (

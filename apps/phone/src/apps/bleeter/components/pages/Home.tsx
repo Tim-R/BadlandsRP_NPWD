@@ -1,4 +1,4 @@
-import { useAccountsValue, useBleetsValue, useHasMoreValue, useSetAccounts, useSetBleets, useSetHasMore } from '@apps/bleeter/hooks/state';
+import { bleeterState, useAccountsValue, useBleetsValue, useHasMoreValue, useSetAccounts, useSetBleets, useSetHasMore } from '@apps/bleeter/hooks/state';
 import React, { useEffect, useState } from 'react';
 import { BleetItem } from './BleetItem';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -8,6 +8,7 @@ import { Bleet, BleeterEvents, BleetsFetchResponse } from '@typings/bleeter';
 import { BleeterIcon } from '../BleeterIcon';
 import Alert from '@mui/material/Alert';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'; 
+
 
 
 export const Home: React.FC = () => {
@@ -103,6 +104,7 @@ export const Home: React.FC = () => {
           })
           .map((bleet) => <BleetItem key={bleet.id} bleet={bleet} deleteBleet={deleteBleet}/> )}
       </InfiniteScroll>
+      
       {showAlert && (
         <Alert icon={<CheckCircleIcon fontSize="inherit" />} severity="success">
           Bleet Deleted

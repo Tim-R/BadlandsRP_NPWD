@@ -54,7 +54,7 @@ export const TweetMessage = ({ modalVisible, message, handleChange, onEnter }) =
       onChange={(e) => handleChange(e.currentTarget.value)}
       ref={textFieldInputRef}
       placeholder={t('TWITTER.TWEET_MESSAGE_PLACEHOLDER')}
-      className="min-h-20 w-full resize-none rounded-md border border-neutral-600 bg-neutral-700 p-2 text-base text-white outline-none focus:ring-2 focus:ring-sky-400"
+      className="min-h-20 w-full resize-none rounded-md border border-neutral-600 bg-neutral-700 p-2 text-base text-white outline-none focus:ring-2 focus:ring-green-300"
     />
   );
 

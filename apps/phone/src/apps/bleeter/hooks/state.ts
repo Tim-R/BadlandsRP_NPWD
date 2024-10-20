@@ -23,6 +23,16 @@ export const bleeterState = {
     default: defaultOrMock([], MockBleeterBleets),
   }),
 
+  showCreateBleetForm: atom({
+    key: 'showCreateBleetForm',
+    default: false,
+  }),
+
+  bleeterModalMessage: atom({
+    key: 'bleeterModalMessage',
+    default: '',
+  }),
+
   likedBleets: atom<number[]>({
     key: 'bleeterLikes',
     default: defaultOrMock([], MockBleeterLikes),
